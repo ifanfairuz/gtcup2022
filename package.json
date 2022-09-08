@@ -5,7 +5,7 @@
   "author": "Ifan Fairuz <ifanfairuz@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "node ./dev",
+    "dev": "node ./bin/dev",
     "build_server": "go build -o ./build/main .",
     "build_frontend": "npx webpack",
     "build": "yarn build_frontend && yarn build_server"
