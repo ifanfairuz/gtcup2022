@@ -40,6 +40,7 @@ const listen = () => {
         ignore: [
             ".git",
             "node_modules/**/node_modules",
+            "public/assets/pages",
             "tmp"
         ],
         ext: 'js,json,go,jsx,html',
@@ -49,7 +50,7 @@ const listen = () => {
     monitor.on('restart', files => {
         if (!files) return;
         console.clear();
-        if (files.find(f => f.includes(path.join(__dirname, 'frontend', '')))) {
+        if (files.find(f => f.includes(path.resolve(__dirname, '..', 'frontend', '')))) {
             build_frontend();
         } else {
             build_server().then(() => server.restart());
