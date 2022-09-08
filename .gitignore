@@ -1,0 +1,6 @@
+/node_modules/
+/tmp/
+/testdata/
+/build/
+.env
+yarn.lock

@@ -1,0 +1,66 @@
+const nodemon = require('nodemon');
+const { exec, spawn } = require('child_process');
+const path = require('path');
+
+const build_frontend = () => new Promise(res => {
+    spawn('yarn', ['build_frontend'], { stdio: 'inherit' }).on('close', () => {
+        res();
+    });
+});
+const build_server = () => new Promise(res => {
+    spawn('yarn', ['build_server'], { stdio: 'inherit' }).on('close', () => {
+        res();
+    });
+});
+const build = () => new Promise(res => {
+    spawn('yarn', ['build'], { stdio: 'inherit' }).on('close', () => {
+        res();
+    });
+});
+
+const listen = () => {
+    let server = {
+        p: null,
+        start() {
+            this.p = spawn('./build/main', { stdio: 'inherit' });
+        },
+        stop() {
+            if (this.p) this.p.kill();
+            this.p = null;
+        },
+        restart() {
+            this.stop();
+            this.start();
+        }
+    };
+    server.start();
+
+    const monitor = nodemon({
+        exec: '',
+        ignore: [
+            ".git",
+            "node_modules/**/node_modules",
+            "tmp"
+        ],
+        ext: 'js,json,go,jsx,html',
+        runOnChangeOnly: true,
+    });
+    
+    monitor.on('restart', files => {
+        if (!files) return;
+        console.clear();
+        if (files.find(f => f.includes(path.join(__dirname, 'frontend', '')))) {
+            build_frontend();
+        } else {
+            build_server().then(() => server.restart());
+        }
+    });
+    
+    monitor
+    .on('quit', () => {
+        server.stop();
+        process.exit();
+    });
+}
+
+build().then(() => listen());
