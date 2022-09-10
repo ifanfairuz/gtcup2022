@@ -1,0 +1,42 @@
+html,
+body,
+main {
+  background-color: #f8f9fa !important;
+}
+
+.columns.has-border > .column {
+  border-bottom: solid 0.5px hsl(0, 0%, 86%);
+}
+.columns.has-border > .column:not(:last-child) {
+  border-right: solid 0.5px hsl(0, 0%, 86%);
+}
+
+.flex-1 {
+  flex: 1 !important;
+}
+.h-full {
+  height: 100%;
+}
+.w-full {
+  width: 100%;
+}
+.is-absolute {
+  position: absolute;
+}
+@media screen and (max-width: 1023px) {
+  .h-full-mobile {
+    height: 100%;
+  }
+  .w-full-mobile {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .is-absolute-desktop {
+    position: absolute;
+  }
+}
+.is-rounded {
+  border-radius: 100%;
+}

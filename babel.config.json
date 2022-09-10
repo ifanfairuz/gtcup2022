@@ -1,0 +1,12 @@
+{
+    "presets": ["@babel/preset-react"],
+    "plugins": [
+      ["module-resolver", {
+        "root": ["."],
+        "alias": {
+          "@support": "./frontend/support",
+          "@components": "./frontend/components"
+        }
+      }]
+    ]
+  }

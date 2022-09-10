@@ -1,0 +1,26 @@
+{
+  "name": "gtcup2022",
+  "version": "1.0.0",
+  "repository": "https://github.com/ifanfairuz/gtcup2022.git",
+  "author": "Ifan Fairuz <ifanfairuz@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node ./bin/dev",
+    "build_server": "go build -o ./build/main .",
+    "build_frontend": "npx webpack",
+    "build": "yarn build_frontend && yarn build_server"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.19.0",
+    "@babel/preset-react": "^7.18.6",
+    "babel-loader": "^8.2.5",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "luxon": "^3.0.3",
+    "nodemon": "^2.0.19",
+    "react": "^18.2.0",
+    "react-brackets": "^0.4.6",
+    "react-dom": "^18.2.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
