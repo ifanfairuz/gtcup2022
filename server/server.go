@@ -38,7 +38,11 @@ func (server *Server) Init() {
 }
 
 func (server *Server) start() {
-	server.e.Logger.Fatal(server.e.Start(":1323"))
+	port := server.env.PORT
+	if (port == "") {
+		port = "1323"
+	}
+	server.e.Logger.Fatal(server.e.Start(":"+port))
 }
 
 func (server *Server) GetEnv() Env {
