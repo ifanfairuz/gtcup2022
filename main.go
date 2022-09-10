@@ -21,11 +21,14 @@ func init() {
 	app.Init()
 
 	e := app.E()
-	adminPath := "/qwerty"
-	adminGroup := e.Group(adminPath+"/app", server.AuthMiddleware(adminPath+"/auth"))
-	authGroup := e.Group(adminPath+"/auth", server.UnauthMiddleware(adminPath+"/app"))
-	adminGroup.GET("/", admin.Admin)
-	authGroup.GET("/", admin.Admin)
+	mustAuth := server.AuthMiddleware("/bla/auth")
+	mustUnauth := server.UnauthMiddleware("/bla")
+	e.GET("/bla", admin.Admin, mustAuth)
+	e.POST("/bla/update-team", admin.UpdateTeam, mustAuth)
+	e.GET("/bla/generate", admin.Generate, mustAuth)
+	e.GET("/bla/auth", admin.Login, mustUnauth)
+	e.POST("/bla/auth", admin.DoLogin, mustUnauth)
+	e.POST("/bla/logout", admin.DoLogout, mustUnauth)
 }
 
 func main() {

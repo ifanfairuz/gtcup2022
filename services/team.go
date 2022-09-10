@@ -45,6 +45,14 @@ func (service *TeamService) GetKlasemen() interface{} {
 	}
 }
 
+func (service *TeamService) GetTeams() interface{} {
+	return struct{
+		Teams *[]team.Team
+	} {
+		Teams: service.TeamRepo.All(),
+	}
+}
+
 func NewTeamService(dbm *repositories.DatabaseManager) *TeamService {
 	service := &TeamService{DBM: dbm}
 	service.init()

@@ -31,9 +31,13 @@ func (c *AppContext) GetAuth() *users.User {
 	}
 
 	service := services.NewUserService(c.Server.DBM())
-	return service.GetUser(sess.(int))
+	return service.GetUser(sess.(uint))
 }
-func (c *AppContext) SetAuth(user users.User) {
+func (c *AppContext) SetAuth(u interface{}) {
+	if u == nil {
+		c.SetSession("user", nil)
+	}
+	user := u.(users.User)
 	c.SetSession("user", user.ID)
 }
 
@@ -42,7 +46,7 @@ func AuthMiddleware(redirect string) echo.MiddlewareFunc {
 		return func(e echo.Context) error {
 			c := e.(*AppContext)
 			if c.GetAuth() == nil {
-				return c.Redirect(http.StatusMovedPermanently, redirect)
+				return c.Redirect(http.StatusTemporaryRedirect, redirect)
 			}
 			return next(c)
 		}
@@ -56,7 +60,7 @@ func UnauthMiddleware(redirect string) echo.MiddlewareFunc {
 			if c.GetAuth() == nil {
 				return next(c)
 			}
-			return c.Redirect(http.StatusMovedPermanently, redirect)
+			return c.Redirect(http.StatusTemporaryRedirect, redirect)
 		}
 	}
 }

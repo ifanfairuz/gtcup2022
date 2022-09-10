@@ -16,6 +16,9 @@ func (repo *TeamRepo) Create(name string, alamat string) *Team {
 	repo.db.Create(model)
 	return model
 }
+func (repo *TeamRepo) Update(team *Team) {
+	repo.db.Save(team)
+}
 func (repo *TeamRepo) All() *[]Team {
 	var result *[]Team
 	repo.db.Model(&Team{}).Find(&result)
