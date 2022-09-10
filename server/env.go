@@ -15,6 +15,7 @@ type Env struct {
 	DB_USER string
 	DB_PASS string
 	DB_URL string
+	DB_SSL string
 }
 
 func (env *Env) DB_URI() string  {
@@ -24,7 +25,7 @@ func (env *Env) DB_URI() string  {
 	return env.DB_URL
 }
 func (env *Env) DB_DSN() string  {
-	return "host="+ env.DB_HOST +" user="+ env.DB_USER +" password="+ env.DB_PASS +" dbname="+ env.DB_NAME +" port="+ strconv.Itoa(env.DB_PORT) +" sslmode=disable TimeZone=Asia/Jakarta"
+	return "host="+ env.DB_HOST +" user="+ env.DB_USER +" password="+ env.DB_PASS +" dbname="+ env.DB_NAME +" port="+ strconv.Itoa(env.DB_PORT) +" sslmode="+ env.DB_SSL +" TimeZone=Asia/Jakarta"
 }
 
 func loadEnv() Env {
@@ -41,6 +42,7 @@ func loadEnv() Env {
 			DB_NAME: os.Getenv("DB_NAME"),
 			DB_USER: os.Getenv("DB_USER"),
 			DB_PASS: os.Getenv("DB_PASS"),
+			DB_SSL: os.Getenv("DB_SSL"),
 			DB_URL: os.ExpandEnv("DATABASE_URL"),
 		}
 	}
@@ -56,5 +58,6 @@ func loadEnv() Env {
 		DB_NAME: env["DB_NAME"],
 		DB_USER: env["DB_USER"],
 		DB_PASS: env["DB_PASS"],
+		DB_SSL: env["DB_SSL"],
 	}
 }
