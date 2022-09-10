@@ -2,6 +2,7 @@ package server
 
 import (
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/joho/godotenv"
@@ -25,9 +26,23 @@ func (env *Env) DB_DSN() string  {
 func loadEnv() Env {
 	env, _ := godotenv.Read()
 
+	if env["DB_HOST"] == "" {
+		port, err := strconv.Atoi(os.Getenv("DB_PORT"));
+		if err != nil {
+			log.Fatal("Error convert db port")
+		}
+		return Env{
+			DB_HOST: os.Getenv("DB_HOST"),
+			DB_PORT: port,
+			DB_NAME: os.Getenv("DB_NAME"),
+			DB_USER: os.Getenv("DB_USER"),
+			DB_PASS: os.Getenv("DB_PASS"),
+		}
+	}
+
 	port, err := strconv.Atoi(env["DB_PORT"]);
 	if err != nil {
-		log.Fatal("Error conver db port")
+		log.Fatal("Error convert db port")
 	}
 
 	return Env{
