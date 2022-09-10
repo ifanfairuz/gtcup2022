@@ -29,10 +29,14 @@ func (server *Server) initDB()  {
 func (server *Server) DBM() *repositories.DatabaseManager {
 	return server.dbm
 }
+func (server *Server) E() *echo.Echo {
+	return server.e
+}
 
 func (server *Server) Init() {
 	server.env = loadEnv()
 	server.initDB()
+	server.initSesion()
 	server.initRoute()
 	server.initTemplate()
 }
