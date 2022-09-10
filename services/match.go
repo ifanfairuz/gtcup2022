@@ -78,7 +78,7 @@ func (service *MatchService) generateMatchBracket(start time.Time)  {
 			Group: "Perempat Final",
 			Round: 1,
 			Date: curentDate,
-			Label: "Perempat Final 3|Peringkat 1 Grup C|Peringkat 2 Grup A",
+			Label: "Perempat Final 1|Peringkat 1 Grup C|Peringkat 2 Grup A",
 		}, match.Match{
 			Type: TYPE_BRACKET,
 			Group: "Perempat Final",
@@ -90,7 +90,7 @@ func (service *MatchService) generateMatchBracket(start time.Time)  {
 			Group: "Perempat Final",
 			Round: 1,
 			Date: curentDate.AddDate(0,0,2),
-			Label: "Perempat Final 1|Peringkat 1 Grup A|Peringkat 2 Grup D",
+			Label: "Perempat Final 3|Peringkat 1 Grup A|Peringkat 2 Grup D",
 		}, match.Match{
 			Type: TYPE_BRACKET,
 			Group: "Perempat Final",
