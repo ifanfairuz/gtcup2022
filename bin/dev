@@ -40,7 +40,7 @@ const listen = () => {
         ignore: [
             ".git",
             "node_modules/**/node_modules",
-            "public/assets/pages",
+            "public/assets/pages/*.js",
             "tmp"
         ],
         ext: 'js,json,go,jsx,html',
