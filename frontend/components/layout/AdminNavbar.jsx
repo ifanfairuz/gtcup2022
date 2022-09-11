@@ -1,6 +1,10 @@
 import React from "react";
 
 export const AdminNavbar = ({ active }) => {
+  const logout = () => {
+    document.getElementById("form-logout").submit();
+  };
+
   return (
     <div className="tabs has-background-white mb-0">
       <ul>
@@ -13,7 +17,13 @@ export const AdminNavbar = ({ active }) => {
         <li className={active == "bracket" ? "is-active" : ""}>
           <a href="/bla/bracket">Bracket</a>
         </li>
+        <li className={active == "bracket" ? "is-active" : ""}>
+          <a href="#" onClick={logout}>
+            Logout
+          </a>
+        </li>
       </ul>
+      <form action="/bla/logout" method="post" id="form-logout"></form>
     </div>
   );
 };
