@@ -46,7 +46,7 @@ func AuthMiddleware(redirect string) echo.MiddlewareFunc {
 		return func(e echo.Context) error {
 			c := e.(*AppContext)
 			if c.GetAuth() == nil {
-				return c.Redirect(http.StatusTemporaryRedirect, redirect)
+				return c.Redirect(http.StatusFound, redirect)
 			}
 			return next(c)
 		}
@@ -60,7 +60,7 @@ func UnauthMiddleware(redirect string) echo.MiddlewareFunc {
 			if c.GetAuth() == nil {
 				return next(c)
 			}
-			return c.Redirect(http.StatusTemporaryRedirect, redirect)
+			return c.Redirect(http.StatusFound, redirect)
 		}
 	}
 }

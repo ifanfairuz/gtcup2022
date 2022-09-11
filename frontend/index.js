@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { renderToRoot, getData } from "@support/render";
-import { formatDate } from "@support/date";
 import { Navbar, Footer, RoundMatch, BracketMatch, Match } from "@components";
 import { DateTime } from "luxon";
+import { formatDate } from "@support/date";
 
 const App = ({ matches, lastMatches, nextMatches }) => {
   const [group, setGroup] = useState({});

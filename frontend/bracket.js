@@ -41,7 +41,7 @@ const App = ({ matches }) => {
         continue;
       }
       b[match.Round] = b[match.Round] ?? {
-        title: match.Round == 4 ? "" : match.Group,
+        title: "",
         seeds: [],
       };
       b[match.Round].seeds.push({

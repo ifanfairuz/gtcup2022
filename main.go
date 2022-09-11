@@ -21,14 +21,17 @@ func init() {
 	app.Init()
 
 	e := app.E()
-	mustAuth := server.AuthMiddleware("/bla/auth")
+	
 	mustUnauth := server.UnauthMiddleware("/bla")
-	e.GET("/bla", admin.Admin, mustAuth)
-	e.POST("/bla/update-team", admin.UpdateTeam, mustAuth)
-	e.GET("/bla/generate", admin.Generate, mustAuth)
 	e.GET("/bla/auth", admin.Login, mustUnauth)
 	e.POST("/bla/auth", admin.DoLogin, mustUnauth)
 	e.POST("/bla/logout", admin.DoLogout, mustUnauth)
+	
+	mustAuth := server.AuthMiddleware("/bla/auth")
+	e.GET("/bla", admin.Admin, mustAuth)
+	e.POST("/bla/team/update", admin.UpdateTeam, mustAuth)
+	e.GET("/bla/match", admin.AdminMatch, mustAuth)
+	e.GET("/bla/bracket", admin.AdminMatch, mustAuth)
 }
 
 func main() {

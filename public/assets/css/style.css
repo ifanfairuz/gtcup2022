@@ -40,3 +40,13 @@ main {
 .is-rounded {
   border-radius: 100%;
 }
+
+.admin-set {
+  border-width: 1px;
+  border-radius: 3px;
+  border-color: grey;
+  border-style: solid;
+}
+.dot {
+  display: inline-block;
+}

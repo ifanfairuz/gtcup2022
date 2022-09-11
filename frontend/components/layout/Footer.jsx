@@ -2,15 +2,15 @@ import React from "react";
 
 export const Footer = ({ active }) => {
   return (
-    <footer class="footer mt-10 has-background-dark has-text-light">
-      <div class="columns">
-        <div class="column">
+    <footer className="footer mt-10 has-background-dark has-text-light">
+      <div className="columns">
+        <div className="column">
           <img
             src="/assets/img/logo.svg"
             alt="logo"
             className="image is-64x64 mb-2 mx-auto"
           />
-          <h4 class="has-text-weight-semibold is-size-4 has-text-centered">
+          <h4 className="has-text-weight-semibold is-size-4 has-text-centered">
             GTCup 2022
           </h4>
           <p className="has-text-centered">

@@ -58,10 +58,9 @@ const App = ({ klasemen }) => {
             </div>
           </div>
         </div>
-        <Klasemen title="Grup A" datas={klasemen.A} />
-        <Klasemen title="Grup B" datas={klasemen.B} />
-        <Klasemen title="Grup C" datas={klasemen.C} />
-        <Klasemen title="Grup D" datas={klasemen.D} />
+        {Object.keys(klasemen).map((grup) => (
+          <Klasemen key={grup} title={`Grup ${grup}`} datas={klasemen[grup]} />
+        ))}
       </div>
       <Footer />
     </div>

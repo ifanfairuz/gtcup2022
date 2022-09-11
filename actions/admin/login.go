@@ -19,15 +19,15 @@ func DoLogin(e echo.Context) error {
 	service := services.NewUserService(c.Server.DBM())
 	user := service.Login(username, password)
 	if user == nil {
-		return e.Redirect(http.StatusTemporaryRedirect, e.Path())
+		return e.Redirect(http.StatusFound, e.Path())
 	}
 	c.SetAuth(*user)
-	return e.Redirect(http.StatusTemporaryRedirect, "/bla")
+	return e.Redirect(http.StatusFound, "/bla")
 }
 
 func DoLogout(e echo.Context) error {
 	c := e.(*server.AppContext)
 	c.SetAuth(nil)
-	return e.Redirect(http.StatusTemporaryRedirect, "/bla/auth")
+	return e.Redirect(http.StatusFound, "/bla/auth")
 
 }

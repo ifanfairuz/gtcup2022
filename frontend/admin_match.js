@@ -1,13 +1,13 @@
 import React from "react";
 import { renderToRoot, getData } from "@support/render";
-import { Navbar, Footer, AdminTeam, AdminNavbar } from "@components";
+import { Navbar, Footer, AdminNavbar, AdminMatch } from "@components";
 
-const App = ({ teams }) => {
+const App = ({ matches }) => {
   return (
     <div>
       <Navbar />
-      <AdminNavbar active="team" />
-      <AdminTeam datas={teams} />
+      <AdminNavbar active="match" />
+      <AdminMatch datas={matches} />
       <Footer />
     </div>
   );

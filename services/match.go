@@ -181,6 +181,14 @@ func (service *MatchService) GetBracket() interface{} {
 	return result;
 }
 
+func (service *MatchService) GetAdminMatch() interface{} {
+	return struct {
+		Matches []match.Match `json:"matches"`
+	}{
+		Matches: *service.MatchRepo.All(),
+	}
+}
+
 func NewMatchService(dbm *repositories.DatabaseManager) *MatchService {
 	service := &MatchService{DBM: dbm}
 	service.init()
