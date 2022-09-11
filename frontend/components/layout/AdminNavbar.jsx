@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 
 export const AdminNavbar = ({ active }) => {
+  const formLogout = useRef();
   const logout = () => {
-    document.getElementById("form-logout").submit();
+    formLogout.current.submit();
   };
 
   return (
@@ -23,7 +24,7 @@ export const AdminNavbar = ({ active }) => {
           </a>
         </li>
       </ul>
-      <form action="/bla/logout" method="post" id="form-logout"></form>
+      <form action="/bla/logout" method="post" ref={formLogout}></form>
     </div>
   );
 };
