@@ -9,7 +9,6 @@ import { Dropdown } from "./form/Dropdown";
 import { Bracket } from "./match/Bracket";
 import { Match } from "./match/Match";
 import { Set } from "./match/Set";
-import { CurrentMatch } from "./match/CurrentMatch";
 import { RoundMatch } from "./match/RoundMatch";
 import { BracketMatch } from "./match/BracketMatch";
 import { Klasemen } from "./match/Klasemen";
@@ -27,7 +26,6 @@ export {
   Crown,
   AngleDown,
   Dropdown,
-  CurrentMatch,
   RoundMatch,
   BracketMatch,
   Klasemen,

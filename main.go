@@ -22,6 +22,7 @@ func initAdmin(app *server.Server)  {
 	e.GET("/bla", admin.Admin, mustAuth)
 	e.POST("/bla/team/update", admin.UpdateTeam, mustAuth)
 	e.GET("/bla/match", admin.AdminMatch, mustAuth)
+	e.POST("/bla/match/update", admin.UpdateMatch, mustAuth)
 	e.GET("/bla/bracket", admin.AdminMatch, mustAuth)
 }
 

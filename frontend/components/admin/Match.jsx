@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { ModalInputMatch } from "./ModalInputMatch";
+import { ModalTeamMatch } from "./ModalTeamMatch";
 import { DateTime } from "luxon";
 import { formatDate } from "@support/date";
 
@@ -41,8 +42,9 @@ function generateInfo(match) {
   };
 }
 
-export const Match = ({ datas }) => {
+export const Match = ({ datas, teams }) => {
   const [modalInput, setModalInput] = useState(null);
+  const [modalTeam, setModalTeam] = useState(null);
   const matches = useMemo(() => datas.map((d) => generateInfo(d)), [datas]);
 
   return (
@@ -56,7 +58,7 @@ export const Match = ({ datas }) => {
           <table className="table is-striped is-fullwidth is-narrow">
             <thead>
               <tr>
-                <th width="50px">#</th>
+                <th width="100px">#</th>
                 <th width="50px">Id</th>
                 <th>Info</th>
                 <th width="200px">Tanding</th>
@@ -68,46 +70,65 @@ export const Match = ({ datas }) => {
             </thead>
             <tbody>
               {matches.map((m) => {
-                const { ID, info, Done, Winner, TeamHomeId, TeamAwayId } = m;
                 return (
-                  <tr key={ID}>
+                  <tr key={m.ID}>
                     <td>
-                      <button
-                        type="button"
-                        className="button is-small is-warning"
-                        onClick={() => setModalInput(m)}
-                      >
-                        edit
-                      </button>
+                      <div className="field has-addons">
+                        <p className="control">
+                          <button
+                            type="button"
+                            className="button is-small is-warning"
+                            onClick={() => setModalInput(m)}
+                          >
+                            edit
+                          </button>
+                        </p>
+                        {m.Type == "B" && (
+                          <p className="control">
+                            <button
+                              type="button"
+                              className="button is-small is-info"
+                              onClick={() => setModalTeam(m)}
+                            >
+                              tim
+                            </button>
+                          </p>
+                        )}
+                      </div>
                     </td>
-                    <td>{ID}</td>
-                    <td>{info.label}</td>
+                    <td>{m.ID}</td>
+                    <td>{m.info.label}</td>
                     <td>
                       <div className="is-flex is-align-items-center">
                         <div
-                          className={`dot p-1 mr-1 is-rounded has-background-${
-                            Done ? "success" : "danger"
+                          className={`dot p-1 mr-1 is-rounded-all has-background-${
+                            m.Done ? "success" : "danger"
                           }`}
                         />
-                        <span>{info.date}</span>
+                        <span>{m.info.date}</span>
                       </div>
                     </td>
-                    <td>{info.home}</td>
-                    <td>{info.away}</td>
+                    <td>{m.info.home}</td>
+                    <td>{m.info.away}</td>
                     <td>
-                      {Done
-                        ? Winner == TeamHomeId
-                          ? info.home
-                          : Winner == TeamAwayId
-                          ? info.away
+                      {m.Done
+                        ? m.Winner == m.TeamHomeId
+                          ? m.info.home
+                          : m.Winner == m.TeamAwayId
+                          ? m.info.away
                           : "-"
                         : "-"}
                     </td>
                     <td>
-                      <strong>#{} </strong>
-                      <span>
-                        [H({}), A({})]
-                      </span>
+                      <strong className="mr-1">
+                        {m.Sets.filter((s) => s.Winner == m.TeamHomeId).length}-
+                        {m.Sets.filter((s) => s.Winner == m.TeamAwayId).length}
+                      </strong>
+                      {m.Sets.map((s) => (
+                        <span key={s.ID} className="mr-1">
+                          <strong>#{s.Key}</strong>[{s.Home} - {s.Away}]
+                        </span>
+                      ))}
                     </td>
                   </tr>
                 );
@@ -127,6 +148,20 @@ export const Match = ({ datas }) => {
               : null
           }
           matches={matches}
+        />
+      )}
+      {!!modalTeam && (
+        <ModalTeamMatch
+          onClose={() => setModalTeam(null)}
+          edit={
+            modalTeam
+              ? typeof modalTeam !== "boolean"
+                ? modalTeam
+                : null
+              : null
+          }
+          matches={matches}
+          teams={teams}
         />
       )}
     </form>

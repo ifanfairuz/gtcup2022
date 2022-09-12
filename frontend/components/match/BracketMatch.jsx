@@ -20,7 +20,7 @@ export const BracketMatch = ({ title, datas, ...props }) => {
         return (
           <div key={i} className="columns is-gapless has-border mb-0">
             {datas.map(({ title, match }) => (
-              <div key={match.ID} className="column">
+              <div key={match.ID} id={`match-${match.ID}`} className="column">
                 <div className="py-1 px-4 has-background-grey-lighter has-text-weight-medium">
                   {title}
                 </div>

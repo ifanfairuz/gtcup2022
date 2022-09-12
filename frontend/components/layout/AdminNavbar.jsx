@@ -16,9 +16,6 @@ export const AdminNavbar = ({ active }) => {
           <a href="/bla/match">Match</a>
         </li>
         <li className={active == "bracket" ? "is-active" : ""}>
-          <a href="/bla/bracket">Bracket</a>
-        </li>
-        <li className={active == "bracket" ? "is-active" : ""}>
           <a href="#" onClick={logout}>
             Logout
           </a>

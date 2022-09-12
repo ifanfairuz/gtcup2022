@@ -5,24 +5,43 @@ import { Navbar, Bracket } from "@components";
 import { DateTime } from "luxon";
 
 function generateMatch(match, aditional = {}) {
+  const date = formatDate(DateTime.fromISO(match.Date));
   const temp = match.Label.split("|");
-  if (match.TeamAwayId && match.TeamHomeId) {
-    return {
-      label: temp[0],
-      date: match.date,
-      home: match.TeamHome.Name,
-      away: match.TeamAway.Name,
-      ...aditional,
-    };
-  } else {
-    return {
-      label: temp[0],
-      date: match.date,
-      home: temp[1],
-      away: temp[2],
-      ...aditional,
+  let info = {
+    date,
+    id: match.ID,
+    label: temp[0],
+    home: match.TeamHome.Name,
+    away: match.TeamAway.Name,
+    agregat: "",
+    winner: "",
+    poin: { home: 0, away: 0 },
+    done: match.Done,
+    ...aditional,
+  };
+  if (!match.TeamAwayId || !match.TeamHomeId) {
+    info.home = temp[1];
+    info.away = temp[2];
+  }
+
+  // done
+  if (match.Done) {
+    const poinHome = match.Sets.filter(
+      (s) => s.Winner === match.TeamHomeId
+    ).length;
+    const poinAway = match.Sets.filter(
+      (s) => s.Winner === match.TeamAwayId
+    ).length;
+    info.agregat = `${poinHome}-${poinAway}`;
+    info.winner =
+      poinHome > poinAway ? "home" : poinHome < poinAway ? "away" : "";
+    info.poin = {
+      home: poinHome,
+      away: poinAway,
     };
   }
+
+  return info;
 }
 
 const App = ({ matches }) => {
@@ -32,11 +51,10 @@ const App = ({ matches }) => {
     let b = {};
     let third;
     for (const match of matches) {
-      const date = formatDate(DateTime.fromISO(match.Date));
       if (match.Round == 3) {
         third = {
           id: match.ID,
-          match: generateMatch(match, { date }),
+          match: generateMatch(match),
         };
         continue;
       }
@@ -46,7 +64,7 @@ const App = ({ matches }) => {
       };
       b[match.Round].seeds.push({
         id: match.ID,
-        match: generateMatch(match, { date }),
+        match: generateMatch(match),
         third: match.Round == 4 ? third : undefined,
       });
     }
