@@ -59,34 +59,40 @@ func (repo *MatchRepo) GetDateLastMatch() (time.Time, error) {
 	}
 	return time.Now(), errors.New("no data")
 }
-func (repo *MatchRepo) GetDateNextMatch(minDate time.Time) (time.Time, error) {
+func (repo *MatchRepo) GetDateNextMatch(minDate ...time.Time) (time.Time, error) {
 	var res struct{ Date time.Time }
-	db := repo.db.Table("matches").Select("date").Where("done = ? and date > ?", false, minDate).Order("date ASC").Group("date").First(&res)
+	q := repo.db.Table("matches").Select("date").Order("date ASC").Group("date").Where("done = ?", false)
+	if len(minDate) > 0 {
+		q = q.Where("date > ?", minDate[0])
+	}
+	db := q.First(&res)
 	if (db.RowsAffected > 0) {
 		return res.Date, nil
 	}
 	return time.Now(), errors.New("no data")
 }
 func (repo *MatchRepo) GetLastMatches() *[]Match {
-	var res *[]Match
+	var res []Match
 	date, err := repo.GetDateLastMatch()
 	if err != nil {
-		return res;
+		return &[]Match{};
 	}
-
 	repo.QueryAll().Where("date = ?", date).Order("round ASC").Find(&res)
-	return res;
+	return &res;
 }
 func (repo *MatchRepo) GetNextMatches() *[]Match {
-	var res *[]Match
-	lastdate, _ := repo.GetDateLastMatch()
-	date, err := repo.GetDateNextMatch(lastdate)
-	if err != nil {
-		return res;
+	var res []Match
+	lastdate := []time.Time{}
+	d, e := repo.GetDateLastMatch()
+	if e == nil {
+		lastdate = append(lastdate, d)
 	}
-
+	date, err := repo.GetDateNextMatch(lastdate...)
+	if err != nil {
+		return &[]Match{};
+	}
 	repo.QueryAll().Where("date = ?", date).Order("round ASC").Find(&res)
-	return res;
+	return &res;
 }
 
 func (repo *MatchRepo) GetGroupDoneMatchesByTeam(team_id uint) *[]Match {
