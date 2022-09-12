@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 
 export const AdminNavbar = ({ active }) => {
+  const formLogout = useRef();
+  const logout = () => {
+    formLogout.current.submit();
+  };
+
   return (
     <div className="tabs has-background-white mb-0">
       <ul>
@@ -11,9 +16,12 @@ export const AdminNavbar = ({ active }) => {
           <a href="/bla/match">Match</a>
         </li>
         <li className={active == "bracket" ? "is-active" : ""}>
-          <a href="/bla/bracket">Bracket</a>
+          <a href="#" onClick={logout}>
+            Logout
+          </a>
         </li>
       </ul>
+      <form action="/bla/logout" method="post" ref={formLogout}></form>
     </div>
   );
 };

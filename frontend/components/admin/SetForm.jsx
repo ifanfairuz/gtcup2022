@@ -9,10 +9,10 @@ export const SetForm = ({ set, match, onChange, onDelete }) => {
   );
 
   return (
-    <div className="column is-full admin-set">
+    <div className="column is-full b-all">
       <div className="field is-horizontal">
         <div className="field-label is-small">
-          <label className="label">Key</label>
+          <label className="label">Set Ke</label>
         </div>
         <div className="field-body">
           <div className="field">
@@ -66,7 +66,7 @@ export const SetForm = ({ set, match, onChange, onDelete }) => {
       </div>
       <div className="field is-horizontal">
         <div className="field-label is-small">
-          <label className="label">Description</label>
+          <label className="label">Deskripsi</label>
         </div>
         <div className="field-body">
           <div className="field">

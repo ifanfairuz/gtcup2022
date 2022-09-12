@@ -36,9 +36,10 @@ func (c *AppContext) GetAuth() *users.User {
 func (c *AppContext) SetAuth(u interface{}) {
 	if u == nil {
 		c.SetSession("user", nil)
+	} else {
+		user := u.(users.User)
+		c.SetSession("user", user.ID)
 	}
-	user := u.(users.User)
-	c.SetSession("user", user.ID)
 }
 
 func AuthMiddleware(redirect string) echo.MiddlewareFunc {

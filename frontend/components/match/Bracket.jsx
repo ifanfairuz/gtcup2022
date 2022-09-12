@@ -5,6 +5,7 @@ import {
   SeedItem,
   SeedTeam,
 } from "react-brackets";
+import { Crown } from "@components/icons/Crown";
 
 const CustomSeedItem = ({ match, third }) => {
   return (
@@ -23,14 +24,26 @@ const CustomSeedItem = ({ match, third }) => {
         {match.label}
       </p>
       <SeedItem>
-        <div>
+        <a href={`/#match-${match.id}`} className="has-text-white">
           <SeedTeam style={{ minWidth: "300px" }}>
-            {match.home || "NO TEAM "}
+            <span>
+              {match.home || "NO TEAM "}
+              {match.winner == "home" && (
+                <Crown className="has-text-warning ml-2" />
+              )}
+            </span>
+            {!!match.done && <span>{match.poin.home}</span>}
           </SeedTeam>
           <SeedTeam style={{ minWidth: "300px" }}>
-            {match.away || "NO TEAM "}
+            <span>
+              {match.away || "NO TEAM "}
+              {match.winner == "away" && (
+                <Crown className="has-text-warning ml-2" />
+              )}
+            </span>
+            {!!match.done && <span>{match.poin.away}</span>}
           </SeedTeam>
-        </div>
+        </a>
       </SeedItem>
       <p className="has-text-centered p-1">{match.date}</p>
     </div>
@@ -78,7 +91,7 @@ export const Bracket = ({ rounds }) => {
           {rounds.map((r, i) => (
             <div
               key={`indicator-swipe-${i}`}
-              className={`p-1 is-rounded mx-1 ${
+              className={`p-1 is-rounded-all mx-1 ${
                 active == i
                   ? "has-background-dark"
                   : "has-background-grey-light"

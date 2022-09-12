@@ -1,6 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Dropdown } from "@components/form/Dropdown";
 import { SetForm } from "./SetForm";
+import { DateTime } from "luxon";
 
 function generateOption(match) {
   return {
@@ -11,12 +18,16 @@ function generateOption(match) {
 }
 
 export const ModalInputMatch = ({ onClose, matches, edit }) => {
+  const submitButton = useRef();
   const matchesOptions = useMemo(
     () => matches.map((m) => generateOption(m)),
     [matches]
   );
   const [match, setMatch] = useState(edit);
   const [sets, setSets] = useState([]);
+  const [date, setDate] = useState(
+    edit ? DateTime.fromISO(edit.Date).toFormat("yyyy-MM-dd'T'HH:mm") : ""
+  );
 
   const addSet = useCallback(() => {
     if (!match) return;
@@ -24,7 +35,6 @@ export const ModalInputMatch = ({ onClose, matches, edit }) => {
       ...s,
       {
         ID: null,
-        MatchId: match.ID,
         Key: s.length + 1,
         Home: 0,
         Away: 0,
@@ -40,25 +50,52 @@ export const ModalInputMatch = ({ onClose, matches, edit }) => {
     });
   };
 
+  const submit = (e) => {
+    submitButton.current.click(e);
+  };
+
   useEffect(() => {
     setSets(match ? match.Sets || [] : []);
+    setDate(
+      match ? DateTime.fromISO(match.Date).toFormat("yyyy-MM-dd'T'HH:mm") : ""
+    );
   }, [match]);
 
   return (
     <div className="modal is-active">
+      <input type="hidden" name="act" value="update_set" />
       <div className="modal-background"></div>
       <div className="modal-content">
         <div className="card">
           <div className="card-content" style={{ minHeight: "300px" }}>
             <div className="columns is-multiline">
               <div className="column is-full">
-                <p className="title is-6 mb-1">Teams</p>
+                <p className="title is-6 mb-1">Match</p>
                 <Dropdown
                   className="w-full"
                   placeholder="Select Match"
                   options={matchesOptions}
                   value={match ? `${match.ID}` : null}
                   onChange={(id, { match }) => setMatch(match)}
+                />
+                <input
+                  type="hidden"
+                  name="match_id"
+                  value={match ? `${match.ID}` : ""}
+                />
+              </div>
+              <div className="column is-full">
+                <p className="title is-6 mb-1">Tanggal</p>
+                <input
+                  type="datetime-local"
+                  className="input"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+                <input
+                  type="hidden"
+                  name="match_date"
+                  value={DateTime.fromFormat(date, "yyyy-MM-dd'T'HH:mm").toRFC2822()}
                 />
               </div>
               <div className="column is-full">
@@ -89,14 +126,20 @@ export const ModalInputMatch = ({ onClose, matches, edit }) => {
                     </button>
                   </div>
                 </div>
+                <input
+                  type="hidden"
+                  name="sets_json"
+                  value={JSON.stringify(sets)}
+                />
               </div>
               <div className="column is-full">
                 <p className="title is-6">Pertandingan</p>
-                <label class="checkbox">
+                <label className="checkbox">
                   <input
                     type="checkbox"
                     className="mr-1"
                     defaultChecked={match.Done}
+                    name="match_done"
                   />
                   Selesai
                 </label>
@@ -111,10 +154,13 @@ export const ModalInputMatch = ({ onClose, matches, edit }) => {
             >
               Cancel
             </a>
-            <a href="#" className="card-footer-item">
+            <a href="#" onClick={(e) => submit(e)} className="card-footer-item">
               Save
             </a>
           </footer>
+          <button type="submit" style={{ display: "none" }} ref={submitButton}>
+            submit
+          </button>
         </div>
       </div>
       <button

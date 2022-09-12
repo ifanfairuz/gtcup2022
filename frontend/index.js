@@ -35,16 +35,31 @@ const App = ({ matches, lastMatches, nextMatches }) => {
     setBracket(b);
   }, []);
 
+  const onRender = () => {
+    if (window.location.hash) {
+      const el = document.querySelector(window.location.hash);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        const uri = window.location.toString();
+        history.replaceState(
+          {},
+          document.title,
+          uri.substring(0, uri.indexOf("#"))
+        );
+      }
+    }
+  };
+
   return (
-    <div>
+    <div ref={onRender}>
       <Navbar active="pertandingan" />
       <div className="container has-background-white">
         {!!lastMatches && lastMatches.length > 0 && (
           <div className="p-4">
             <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
-              Pertandingan Terakhir
+              Terdekat
             </h4>
-            <p className="has-text-centered mb-4">
+            <p className="has-text-centered mb-2">
               {formatDate(DateTime.fromISO(lastMatches[0].Date))}
             </p>
             <div className="columns">
@@ -57,24 +72,27 @@ const App = ({ matches, lastMatches, nextMatches }) => {
           </div>
         )}
         {!!nextMatches && nextMatches.length > 0 && (
-          <div className="p-4">
-            <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
-              Pertandingan Selanjutnya
-            </h4>
-            <p className="has-text-centered mb-4">
-              {formatDate(DateTime.fromISO(nextMatches[0].Date))}
-            </p>
-            <div className="columns">
-              {nextMatches.map((n) => (
-                <div
-                  key={n.ID}
-                  className="column is-flex is-justify-content-center"
-                >
-                  <Match data={n} />
-                </div>
-              ))}
+          <>
+            <hr className="m-0" />
+            <div className="p-4">
+              <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
+                Akan Datang
+              </h4>
+              <p className="has-text-centered mb-2">
+                {formatDate(DateTime.fromISO(nextMatches[0].Date))}
+              </p>
+              <div className="columns">
+                {nextMatches.map((n) => (
+                  <div
+                    key={n.ID}
+                    className="column is-flex is-justify-content-center"
+                  >
+                    <Match data={n} />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          </>
         )}
         <RoundMatch title="Penyisihan Grup" datas={group} />
         {Object.values(bracket).map(({ title, datas }) => (

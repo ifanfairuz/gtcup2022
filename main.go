@@ -10,6 +10,22 @@ import (
 
 var app server.Server
 
+func initAdmin(app *server.Server)  {
+	e := app.E()
+	
+	mustUnauth := server.UnauthMiddleware("/bla")
+	e.GET("/bla/auth", admin.Login, mustUnauth)
+	e.POST("/bla/auth", admin.DoLogin, mustUnauth)
+	
+	mustAuth := server.AuthMiddleware("/bla/auth")
+	e.POST("/bla/logout", admin.DoLogout, mustAuth)
+	e.GET("/bla", admin.Admin, mustAuth)
+	e.POST("/bla/team/update", admin.UpdateTeam, mustAuth)
+	e.GET("/bla/match", admin.AdminMatch, mustAuth)
+	e.POST("/bla/match/update", admin.UpdateMatch, mustAuth)
+	e.GET("/bla/bracket", admin.AdminMatch, mustAuth)
+}
+
 func init() {
 	routes := server.Routes{
 		server.Route{Method: http.MethodGet, Path: "/", Handler: actions.Index, Middlewares: nil},
@@ -18,22 +34,10 @@ func init() {
 	}
 
 	app = server.CreateServer(routes)
-	app.Init()
-
-	e := app.E()
-	
-	mustUnauth := server.UnauthMiddleware("/bla")
-	e.GET("/bla/auth", admin.Login, mustUnauth)
-	e.POST("/bla/auth", admin.DoLogin, mustUnauth)
-	e.POST("/bla/logout", admin.DoLogout, mustUnauth)
-	
-	mustAuth := server.AuthMiddleware("/bla/auth")
-	e.GET("/bla", admin.Admin, mustAuth)
-	e.POST("/bla/team/update", admin.UpdateTeam, mustAuth)
-	e.GET("/bla/match", admin.AdminMatch, mustAuth)
-	e.GET("/bla/bracket", admin.AdminMatch, mustAuth)
+	initAdmin(&app)
 }
 
 func main() {
+	app.Init()
 	app.Run()
 }

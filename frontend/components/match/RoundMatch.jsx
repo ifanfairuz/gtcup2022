@@ -14,7 +14,7 @@ export const RoundMatch = ({ title, datas, ...props }) => {
           </div>
           <div className="columns is-gapless has-border mb-0">
             {datas.map((d) => (
-              <div key={d.ID} className="column">
+              <div key={d.ID} id={`match-${d.ID}`} className="column">
                 <Match data={d} />
               </div>
             ))}

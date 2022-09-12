@@ -37,13 +37,16 @@ main {
     position: absolute;
   }
 }
-.is-rounded {
+.is-rounded-all {
   border-radius: 100%;
 }
+.is-rounded {
+  border-radius: 5px;
+}
 
-.admin-set {
+.b-all {
   border-width: 1px;
-  border-radius: 3px;
+  border-radius: 5px;
   border-color: grey;
   border-style: solid;
 }

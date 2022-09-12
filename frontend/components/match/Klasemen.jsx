@@ -49,21 +49,21 @@ export const Klasemen = ({ title, datas }) => {
             </tr>
           </thead>
           <tbody>
-            {datas.map((data, i) => (
-              <tr key={data.ID}>
-                <td>{i + 1}</td>
-                <td>{data.Name}</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
+            {datas.map((data) => (
+              <tr key={data.team.ID}>
+                <td>{data.pos}</td>
+                <td>{data.team.Name}</td>
+                <td>{data.P}</td>
+                <td>{data.M}</td>
+                <td>{data.K}</td>
+                <td>{data.SM}</td>
+                <td>{data.SK}</td>
+                <td>{data.AS}</td>
+                <td>{data.SCM}</td>
+                <td>{data.SCK}</td>
+                <td>{data.ASC}</td>
                 <td className="has-text-centered has-text-weight-semibold">
-                  0
+                  {data.poin}
                 </td>
               </tr>
             ))}
