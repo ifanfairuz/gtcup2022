@@ -2,7 +2,6 @@ package admin
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -52,7 +51,6 @@ func AdminMatch(e echo.Context) error {
 	return c.Render(http.StatusOK, "admin_match.html", string(s))
 }
 func updateSet(c *server.AppContext) error {
-	fmt.Println(c.FormValue("match_date"))
 	matchId, _ := strconv.Atoi(c.FormValue("match_id"))
 	matchDate, _ := time.Parse(time.RFC1123Z, c.FormValue("match_date"))
 	matchDone := c.FormValue("match_done") == "on"
