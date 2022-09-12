@@ -27,7 +27,11 @@ func (repo *MatchRepo) Update(team *Match) {
 	repo.db.Save(team)
 }
 func (repo *MatchRepo) DeleteSetsNotIn(match *Match, notin []uint) error {
-	del := repo.db.Model(&set.Set{}).Where("match_id = ? AND id NOT IN ?", match.ID, notin).Delete(&set.Set{})
+	q := repo.db.Where("match_id = ?", match.ID)
+	if len(notin) > 0 {
+		q = q.Where("id NOT IN ?", notin)
+	}
+	del := q.Delete(&set.Set{})
 	return del.Error
 }
 func (repo *MatchRepo) DeleteAllSets(match *Match) {
