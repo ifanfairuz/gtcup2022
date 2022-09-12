@@ -89,3 +89,12 @@ func (repo *MatchRepo) GetNextMatches() *[]Match {
 	return res;
 }
 
+func (repo *MatchRepo) GetGroupDoneMatchesByTeam(team_id uint) *[]Match {
+	var res *[]Match
+	repo.QueryAll().Where(
+		repo.db.Where("team_home_id = ? or team_away_id = ?", team_id, team_id),
+	).Where(
+		repo.db.Where("done = ? and type = ?", true, "G"),
+	).Find(&res)
+	return res;
+}
