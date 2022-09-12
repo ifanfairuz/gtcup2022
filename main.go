@@ -34,10 +34,10 @@ func init() {
 	}
 
 	app = server.CreateServer(routes)
-	initAdmin(&app)
 }
 
 func main() {
 	app.Init()
+	initAdmin(&app)
 	app.Run()
 }

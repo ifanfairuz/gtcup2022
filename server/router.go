@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type AppContext struct {
@@ -18,6 +19,7 @@ type Route struct {
 type Routes []Route
 
 func (server *Server) initRoute() {
+	server.e.Pre(middleware.HTTPSRedirect())
 	server.e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			cc := &AppContext{c, server}
