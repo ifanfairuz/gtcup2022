@@ -57,7 +57,7 @@ func (repo *MatchRepo) QueryAll() *gorm.DB {
 }
 func (repo *MatchRepo) GetDateLastMatch() (time.Time, error) {
 	var res struct{ Date time.Time }
-	db := repo.db.Table("matches").Select("date").Where("done = ?", true).Order("date ASC").Group("date").First(&res)
+	db := repo.db.Table("matches").Select("date").Where("done = ?", true).Order("date DESC").Group("date").First(&res)
 	if (db.RowsAffected > 0) {
 		return res.Date, nil
 	}
@@ -65,7 +65,7 @@ func (repo *MatchRepo) GetDateLastMatch() (time.Time, error) {
 }
 func (repo *MatchRepo) GetDateNextMatch(minDate ...time.Time) (time.Time, error) {
 	var res struct{ Date time.Time }
-	q := repo.db.Table("matches").Select("date").Where("done = ?", false).Order("date DESC").Group("date")
+	q := repo.db.Table("matches").Select("date").Where("done = ?", false).Order("date ASC").Group("date")
 	if len(minDate) > 0 {
 		q = q.Where("date > ?", minDate[0])
 	}
