@@ -65,7 +65,7 @@ func (repo *MatchRepo) GetDateLastMatch() (time.Time, error) {
 }
 func (repo *MatchRepo) GetDateNextMatch(minDate ...time.Time) (time.Time, error) {
 	var res struct{ Date time.Time }
-	q := repo.db.Table("matches").Select("date").Order("date ASC").Group("date").Where("done = ?", false)
+	q := repo.db.Table("matches").Select("date").Where("done = ?", false).Order("date DESC").Group("date")
 	if len(minDate) > 0 {
 		q = q.Where("date > ?", minDate[0])
 	}

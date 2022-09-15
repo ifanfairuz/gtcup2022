@@ -57,7 +57,7 @@ const App = ({ matches, lastMatches, nextMatches }) => {
         {!!lastMatches && lastMatches.length > 0 && (
           <div className="p-4">
             <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
-              Terdekat
+              Pertandingan {lastMatches[0].Done ? "Terakhir" : "Terdekat"}
             </h4>
             <p className="has-text-centered mb-2">
               {formatDate(DateTime.fromISO(lastMatches[0].Date))}
