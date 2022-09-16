@@ -79,12 +79,12 @@ func (service *TeamService) GetKlasemenGroup(group string) []GrupKlasemen {
 		wg.Add(1)
 		go func (t team.Team)  {
 			defer wg.Done()
+			defer m.Unlock()
 			m.Lock()
 			matches := service.MatchRepo.GetGroupDoneMatchesByTeam(t.ID)
 			klasemen := GrupKlasemen{Team: t, Matches: *matches}
 			klasemen.Count()
 			res = append(res, klasemen)
-			m.Unlock()
 		}(t)
 	}
 	wg.Wait()
@@ -114,9 +114,9 @@ func (service *TeamService) getKlasemen() map[string][]GrupKlasemen {
 		wg.Add(1)
 		go func (group string)  {
 			defer wg.Done()
+			defer mutex.Unlock()
 			mutex.Lock()
 			klasemen[group] = service.GetKlasemenGroup(group)
-			mutex.Unlock()
 		}(group)
 	}
 	wg.Wait()

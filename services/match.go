@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/ifanfairuz/gtcup2022/repositories"
@@ -154,22 +155,33 @@ func (service *MatchService) Regenerate(start time.Time, matchPerDay int)  {
 }
 
 func (service *MatchService) GetData() interface{} {
-	var matches []match.Match
-	service.MatchRepo.QueryAll().Order("date ASC").Order("type DESC").Order("round ASC").Order("\"group\" ASC").Find(&matches)
-	lastMatches := service.MatchRepo.GetLastMatches()
-	nextMatches := service.MatchRepo.GetNextMatches()
+	var wg sync.WaitGroup
+	var lastMatches, nextMatches, matches []match.Match
 
-	result := struct {
+	wg.Add(3)
+	go func() {
+		service.MatchRepo.QueryAll().Order("date ASC").Order("type DESC").Order("round ASC").Order("\"group\" ASC").Find(&matches)
+		wg.Done()
+	}()
+	go func() {
+		lastMatches = *service.MatchRepo.GetLastMatches()
+		wg.Done()
+	}()
+	go func() {
+		nextMatches = *service.MatchRepo.GetNextMatches()
+		wg.Done()
+	}()
+
+	wg.Wait()
+	return struct {
 		Matches []match.Match `json:"matches"`
 		NextMatches []match.Match `json:"nextMatches"`
 		LastMatches []match.Match `json:"lastMatches"`
 	}{
 		Matches: matches,
-		LastMatches: *lastMatches,
-		NextMatches: *nextMatches,
+		LastMatches: lastMatches,
+		NextMatches: nextMatches,
 	}
-
-	return result;
 }
 
 func (service *MatchService) GetBracket() interface{} {
