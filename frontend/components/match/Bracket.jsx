@@ -54,7 +54,7 @@ const CustomSeed = ({ seed, breakpoint }) => {
   return (
     <Seed
       mobileBreakpoint={breakpoint}
-      className={`is-relative ${
+      className={`is-relative py-0 ${
         !seed.third
           ? ""
           : "is-flex-direction-column-reverse is-flex-direction-column-desktop"
