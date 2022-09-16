@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { renderToRoot, getData } from "@support/render";
 import { Navbar, Footer, RoundMatch, BracketMatch, Match } from "@components";
 import { DateTime } from "luxon";
@@ -7,6 +7,29 @@ import { formatDate } from "@support/date";
 const App = ({ matches, lastMatches, nextMatches }) => {
   const [group, setGroup] = useState({});
   const [bracket, setBracket] = useState({});
+
+  const nextMatchesData = useMemo(
+    () => {
+      const has = nextMatches && nextMatches.length > 0;
+      if (!has) return null;
+      const date = DateTime.fromISO(nextMatches[0].Date);
+      const label = date.hasSame(DateTime.now(), "day")
+        ? "Pertandingan Hari Ini"
+        : "Akan Datang";
+      return { has, date: formatDate(date), label };
+    },
+    [nextMatches]
+  );
+  const lastMatchesData = useMemo(
+    () => {
+      const has = lastMatches && lastMatches.length > 0;
+      if (!has) return null;
+      const date = DateTime.fromISO(lastMatches[0].Date);
+      const label = `Pertandingan ${lastMatches[0].Done ? "Terakhir" : "Terdekat"}`;
+      return { has, date: formatDate(date), label };
+    },
+    [lastMatches]
+  );
 
   useEffect(() => {
     let g = {};
@@ -54,32 +77,15 @@ const App = ({ matches, lastMatches, nextMatches }) => {
     <div ref={onRender}>
       <Navbar active="pertandingan" />
       <div className="container has-background-white">
-        {!!lastMatches && lastMatches.length > 0 && (
-          <div className="p-4">
-            <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
-              Pertandingan {lastMatches[0].Done ? "Terakhir" : "Terdekat"}
-            </h4>
-            <p className="has-text-centered mb-2">
-              {formatDate(DateTime.fromISO(lastMatches[0].Date))}
-            </p>
-            <div className="columns">
-              {lastMatches.map((n) => (
-                <div key={n.ID} className="column is-flex">
-                  <Match data={n} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        {!!nextMatches && nextMatches.length > 0 && (
+        {!!nextMatchesData && (
           <>
             <hr className="m-0" />
             <div className="p-4">
               <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
-                Akan Datang
+                {nextMatchesData.label}
               </h4>
               <p className="has-text-centered mb-2">
-                {formatDate(DateTime.fromISO(nextMatches[0].Date))}
+                {nextMatchesData.date}
               </p>
               <div className="columns">
                 {nextMatches.map((n) => (
@@ -93,6 +99,23 @@ const App = ({ matches, lastMatches, nextMatches }) => {
               </div>
             </div>
           </>
+        )}
+        {!!lastMatchesData && (
+          <div className="p-4">
+            <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
+              {lastMatchesData.label}
+            </h4>
+            <p className="has-text-centered mb-2">
+              {lastMatchesData.date}
+            </p>
+            <div className="columns">
+              {lastMatches.map((n) => (
+                <div key={n.ID} className="column is-flex">
+                  <Match data={n} />
+                </div>
+              ))}
+            </div>
+          </div>
         )}
         <RoundMatch title="Penyisihan Grup" datas={group} />
         {Object.values(bracket).map(({ title, datas }) => (
