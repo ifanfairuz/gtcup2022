@@ -14,11 +14,11 @@ export const Set = ({ data }) => {
       </p>
       <p className="column has-text-centered">Set {data.Key}</p>
       <p className="column has-text-right">
-        <Ball className="is-size-7 has-text-info mr-1" />
-        <span>{data.Away}</span>
         {data.winner == "away" && (
           <Crown className="is-size-7 has-text-warning ml-1" />
         )}
+        <Ball className="is-size-7 has-text-info mr-1" />
+        <span>{data.Away}</span>
       </p>
     </div>
   );
