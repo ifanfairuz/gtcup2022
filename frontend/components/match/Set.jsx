@@ -15,7 +15,7 @@ export const Set = ({ data }) => {
       <p className="column has-text-centered">Set {data.Key}</p>
       <p className="column has-text-right">
         {data.winner == "away" && (
-          <Crown className="is-size-7 has-text-warning ml-1" />
+          <Crown className="is-size-7 has-text-warning mr-1" />
         )}
         <Ball className="is-size-7 has-text-info mr-1" />
         <span>{data.Away}</span>
