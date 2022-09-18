@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const v = "0-2-7";
+const v = "0-2-8";
 const DIR = "./frontend";
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
         let res = {};
         for (const file of files) {
           if (!file.match(/\.js$/)) continue;
-          res[path.basename(`${file}.${v}`, ".js")] = `${DIR}/${file}`;
+          res[path.basename(file, ".js") + `.${v}`] = `${DIR}/${file}`;
         }
         resolve(res);
       });
