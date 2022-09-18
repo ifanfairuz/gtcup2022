@@ -40,7 +40,7 @@ function generateMatch(data) {
     info.sets = info.sets.map((s) => ({
       ...s,
       winner:
-        data.Winner == data.TeamHomeId
+        s.Winner == data.TeamHomeId
           ? "home"
           : s.Winner == data.TeamAwayId
           ? "away"
