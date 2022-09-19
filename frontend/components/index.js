@@ -15,6 +15,7 @@ import { Klasemen } from "./match/Klasemen";
 import { Team as AdminTeam } from "./admin/Team";
 import { Match as AdminMatch } from "./admin/Match";
 import { ModalInputMatch as AdminModalInputMatch } from "./admin/ModalInputMatch";
+import { ShareButtons } from "./share/ShareButtons";
 
 export {
   Navbar,
@@ -34,4 +35,5 @@ export {
   Set,
   AdminTeam,
   AdminMatch,
+  ShareButtons,
 };

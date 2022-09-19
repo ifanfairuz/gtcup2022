@@ -19,7 +19,9 @@ type Route struct {
 type Routes []Route
 
 func (server *Server) initRoute() {
-	server.e.Pre(middleware.HTTPSRedirect())
+	if server.env.APP_ENV == "production" {
+		server.e.Pre(middleware.HTTPSRedirect())
+	}
 	server.e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			cc := &AppContext{c, server}

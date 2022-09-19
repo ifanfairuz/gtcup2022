@@ -91,13 +91,13 @@ func UpdateMatch(e echo.Context) error {
 func Generate(e echo.Context) error {
 	c := e.(*server.AppContext)
 	// d := e.QueryParam("date")
-	// start := time.Date(2022, 9, 14, 19, 0, 0, 0, time.FixedZone("Asia/Jakarta", 25200))
+	// start := time.Date(2022, 9, 14, 19, 0, 0, 0, support.JAKARTA_TZ)
 	// if d != "" {
 	// 	t := strings.Split(d, "-")
 	// 	y,_:= strconv.Atoi(t[2])
 	// 	m,_:= strconv.Atoi(t[1])
 	// 	d,_:= strconv.Atoi(t[0])
-	// 	start = time.Date(y, time.Month(m), d, 19, 0, 0, 0, time.FixedZone("Asia/Jakarta", 25200))
+	// 	start = time.Date(y, time.Month(m), d, 19, 0, 0, 0, support.JAKARTA_TZ)
 	// }
 	matchService := services.NewMatchService(c.Server.DBM())
 	// matchService.Regenerate(start, 2)
