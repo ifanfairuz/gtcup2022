@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { Match } from "./Match";
+// import { ShareButtons } from "@components/share/ShareButtons";
 
 export const BracketMatch = ({ title, datas, ...props }) => {
   const matches = useMemo(() => {
@@ -24,6 +25,11 @@ export const BracketMatch = ({ title, datas, ...props }) => {
                 <div className="py-1 px-4 has-background-grey-lighter has-text-weight-medium">
                   {title}
                 </div>
+                {/* {!!match.TeamHomeId && !!match.TeamAwayId && (
+                  <div className="py-1 px-4 has-background-white-ter">
+                    <ShareButtons size="small" />
+                  </div>
+                )} */}
                 <Match data={match} />
               </div>
             ))}

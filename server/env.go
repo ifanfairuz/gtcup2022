@@ -9,6 +9,7 @@ import (
 )
 
 type Env struct {
+	APP_ENV string
 	PORT string
 	DB_HOST string
 	DB_PORT int
@@ -38,6 +39,7 @@ func loadEnv() Env {
 			log.Fatal("Error convert db port")
 		}
 		return Env{
+			APP_ENV: os.Getenv("APP_ENV"),
 			PORT: os.Getenv("PORT"),
 			DB_HOST: os.Getenv("DB_HOST"),
 			DB_PORT: port,
@@ -55,6 +57,7 @@ func loadEnv() Env {
 	}
 
 	return Env{
+		APP_ENV: env["APP_ENV"],
 		PORT: env["PORT"],
 		DB_HOST: env["DB_HOST"],
 		DB_PORT: port,

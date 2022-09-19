@@ -1,5 +1,6 @@
 import React from "react";
 import { Match } from "./Match";
+// import { ShareButtons } from "@components/share/ShareButtons";
 
 export const RoundMatch = ({ title, datas, ...props }) => {
   return (
@@ -12,6 +13,9 @@ export const RoundMatch = ({ title, datas, ...props }) => {
           <div className="py-1 px-4 has-background-grey-lighter has-text-weight-medium">
             {title}
           </div>
+          {/* <div className="py-1 px-4 has-background-white-ter">
+            <ShareButtons size="small" />
+          </div> */}
           <div className="columns is-gapless has-border mb-0">
             {datas.map((d) => (
               <div key={d.ID} id={`match-${d.ID}`} className="column">

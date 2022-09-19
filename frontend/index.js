@@ -1,6 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { renderToRoot, getData } from "@support/render";
-import { Navbar, Footer, RoundMatch, BracketMatch, Match } from "@components";
+import {
+  Navbar,
+  Footer,
+  RoundMatch,
+  BracketMatch,
+  Match,
+  // ShareButtons,
+} from "@components";
 import { DateTime } from "luxon";
 import { formatDate } from "@support/date";
 
@@ -16,7 +23,7 @@ const App = ({ matches, lastMatches, nextMatches }) => {
       const label = date.hasSame(DateTime.now(), "day")
         ? "Pertandingan Hari Ini"
         : "Akan Datang";
-      return { has, date: formatDate(date), label };
+      return { has, date, date_format: formatDate(date), label };
     },
     [nextMatches]
   );
@@ -26,7 +33,7 @@ const App = ({ matches, lastMatches, nextMatches }) => {
       if (!has) return null;
       const date = DateTime.fromISO(lastMatches[0].Date);
       const label = `Pertandingan ${lastMatches[0].Done ? "Terakhir" : "Terdekat"}`;
-      return { has, date: formatDate(date), label };
+      return { has, date, date_format: formatDate(date), label };
     },
     [lastMatches]
   );
@@ -84,9 +91,10 @@ const App = ({ matches, lastMatches, nextMatches }) => {
               <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
                 {nextMatchesData.label}
               </h4>
-              <p className="has-text-centered mb-2">
-                {nextMatchesData.date}
-              </p>
+              <div className="is-flex is-flex-direction-column is-align-items-center mb-2">
+                <p className="has-text-centered">{nextMatchesData.date_format}</p>
+                {/* <ShareButtons inverted date={nextMatchesData.date} /> */}
+              </div>
               <div className="columns">
                 {nextMatches.map((n) => (
                   <div
@@ -105,9 +113,10 @@ const App = ({ matches, lastMatches, nextMatches }) => {
             <h4 className="is-size-4 has-text-weight-semibold has-text-centered">
               {lastMatchesData.label}
             </h4>
-            <p className="has-text-centered mb-2">
-              {lastMatchesData.date}
-            </p>
+            <div className="is-flex is-flex-direction-column is-align-items-center mb-2">
+              <p className="has-text-centered">{lastMatchesData.date_format}</p>
+              {/* <ShareButtons inverted date={lastMatchesData.date} /> */}
+            </div>
             <div className="columns">
               {lastMatches.map((n) => (
                 <div key={n.ID} className="column is-flex">

@@ -31,6 +31,7 @@ func init() {
 		server.Route{Method: http.MethodGet, Path: "/", Handler: actions.Index, Middlewares: nil},
 		server.Route{Method: http.MethodGet, Path: "/klasemen", Handler: actions.Klasemen, Middlewares: nil},
 		server.Route{Method: http.MethodGet, Path: "/bracket", Handler: actions.Bracket, Middlewares: nil},
+		server.Route{Method: http.MethodGet, Path: "/share/image", Handler: actions.ShareImage, Middlewares: nil},
 	}
 
 	app = server.CreateServer(routes)

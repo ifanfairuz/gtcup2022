@@ -52,8 +52,8 @@ func (gk *GrupKlasemen) Count() {
 	}
 	gk.AS = gk.SM - gk.SK
 	gk.ASC = gk.SCM - gk.SCK
-	gk.Poin = gk.M * 1
-	gk.Total = int64((gk.Poin * 4) + (gk.AS * 3) + (gk.ASC * 2))
+	gk.Poin = gk.M * 3
+	gk.Total = int64((gk.M * 30 * 5) + (gk.AS * 30) + gk.ASC)
 }
 
 type TeamService struct {
