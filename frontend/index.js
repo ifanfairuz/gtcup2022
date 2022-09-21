@@ -6,7 +6,7 @@ import {
   RoundMatch,
   BracketMatch,
   Match,
-  // ShareButtons,
+  ShareButtons,
 } from "@components";
 import { DateTime } from "luxon";
 import { formatDate } from "@support/date";
@@ -42,21 +42,25 @@ const App = ({ matches, lastMatches, nextMatches }) => {
     let g = {};
     let b = {};
     for (const match of matches) {
-      const date = formatDate(DateTime.fromISO(match.Date));
+      const date = DateTime.fromISO(match.Date);
+      const title = formatDate(date);
       if (match.Type == "G") {
-        g[date] = g[date] ?? {
-          title: date,
+        g[title] = g[title] ?? {
+          title,
+          date,
           datas: [],
         };
 
-        g[date].datas.push(match);
+        g[title].datas.push(match);
       } else {
         b[match.Round] = b[match.Round] ?? {
           title: match.Group,
+          date,
           datas: {},
         };
-        b[match.Round].datas[date] = {
-          title: date,
+        b[match.Round].datas[title] = {
+          title,
+          date,
           match: match,
         };
       }
@@ -93,7 +97,7 @@ const App = ({ matches, lastMatches, nextMatches }) => {
               </h4>
               <div className="is-flex is-flex-direction-column is-align-items-center mb-2">
                 <p className="has-text-centered">{nextMatchesData.date_format}</p>
-                {/* <ShareButtons inverted date={nextMatchesData.date} /> */}
+                <ShareButtons inverted date={nextMatchesData.date} />
               </div>
               <div className="columns">
                 {nextMatches.map((n) => (
@@ -115,7 +119,7 @@ const App = ({ matches, lastMatches, nextMatches }) => {
             </h4>
             <div className="is-flex is-flex-direction-column is-align-items-center mb-2">
               <p className="has-text-centered">{lastMatchesData.date_format}</p>
-              {/* <ShareButtons inverted date={lastMatchesData.date} /> */}
+              <ShareButtons inverted date={lastMatchesData.date} />
             </div>
             <div className="columns">
               {lastMatches.map((n) => (
