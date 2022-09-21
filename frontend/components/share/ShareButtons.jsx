@@ -21,9 +21,8 @@ const getImage = (date) => {
   });
 };
 const share = (date) => {
-  if (window.navigator.canShare()) {
-    return getImage(date)
-    .then(({uri, name}) => {
+  return getImage(date)
+    .then(({ uri, name }) => {
       return fetch(uri)
         .then((res) => res.blob())
         .then((blob) => {
@@ -34,22 +33,28 @@ const share = (date) => {
         });
     })
     .then((file) => {
-      window.navigator.share({ files: [file] });
-    });
-  }
-
-  return Promise.reject("cannot share");
+      const data = { files: [file] };
+      if (window.navigator.share && window.navigator.canShare(data)) {
+        window.navigator.share(data);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });;
 };
 const download = (date) => {
   return getImage(date)
-  .then(({uri, name}) => {
-    const a = document.createElement("a");
-    a.href = uri;
-    a.download = name
-    document.getElementById("opt").appendChild(a);
-    a.click();
-    setTimeout(() => a.remove(), 1000);
-  });
+    .then(({uri, name}) => {
+      const a = document.createElement("a");
+      a.href = uri;
+      a.download = name
+      document.getElementById("opt").appendChild(a);
+      a.click();
+      setTimeout(() => a.remove(), 1000);
+    })
+    .catch(err => {
+      console.error(err);
+    });
 };
 
 export const ShareButtons = ({ size, date, inverted }) => {
@@ -91,19 +96,21 @@ export const ShareButtons = ({ size, date, inverted }) => {
           <span>{loading.download ? "loading..." : "Unduh"}</span>
         </button>
       </p>
-      <p className="control">
-        <button
-          className={`button is-info ${
-            inverted ? "is-inverted" : ""
-          } is-${btnsize} ${loading.share && !inverted ? "is-loading" : ""}`}
-          disabled={loading.share || loading.download}
-          type="button"
-          onClick={onShare}
-        >
-          <ShareIcon className={`icon is-${btnsize} mr-1`} />
-          <span>{loading.share ? "loading..." : "Bagikan"}</span>
-        </button>
-      </p>
+      {!!window.navigator.share && (
+        <p className="control">
+          <button
+            className={`button is-info ${
+              inverted ? "is-inverted" : ""
+            } is-${btnsize} ${loading.share && !inverted ? "is-loading" : ""}`}
+            disabled={loading.share || loading.download}
+            type="button"
+            onClick={onShare}
+          >
+            <ShareIcon className={`icon is-${btnsize} mr-1`} />
+            <span>{loading.share ? "loading..." : "Bagikan"}</span>
+          </button>
+        </p>
+      )}
     </div>
   );
 };
