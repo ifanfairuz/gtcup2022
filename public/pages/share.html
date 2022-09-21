@@ -22,11 +22,6 @@
     <meta property="twitter:description" content="Turnamen Voli Bola Plastik GTCup 2022 - Geneng Timur, Kelurahan Ledug - Prigen">
 
     <link rel="shortcut icon" href="/assets/favicon.png" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
-    <link rel="stylesheet" href="/assets/css/style.css" />
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.3/build/global/luxon.min.js" integrity="sha256-RH4TKnKcKyde0s2jc5BW3pXZl/5annY3fcZI9VrV5WQ=" crossorigin="anonymous"></script>
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-JC7WD6YG1W"></script>
@@ -37,11 +32,34 @@
 
       gtag('config', 'G-JC7WD6YG1W');
     </script>
-
-    <script>window.DATA = JSON.parse({{.}})</script>
   </head>
-  <body>
-    <main id="root"></main>
-    <script src="/assets/pages/bracket.0-3-4.js"></script>
+  <body onload="doShare()">
+    <img id="image" src="{{.}}" alt="image">
+    <script>
+        function doShare() {
+            if (window.navigator.share) {
+                var img = document.getElementById('image');
+                fetch(img.src, { mode: "cors", referrerPolicy: "no-referrer" })
+                .then(function (res) {
+                    return res.blob()
+                })
+                .then(function (blob) {
+                    return new File([blob], "gtcup2022_match.jpg", {
+                        type: blob.type,
+                        lastModified: Date.now()
+                    }
+                })
+                .then(function (file) {
+                    var data = { files: [file] };
+                    if (window.navigator.canShare && window.navigator.canShare(data)) {
+                        window.navigator.share(data);
+                    }
+                })
+                .catch(function (err) {
+                    alert(err instanceof Object ? err.message : err)
+                });
+            }
+        }
+    </script>
   </body>
 </html>

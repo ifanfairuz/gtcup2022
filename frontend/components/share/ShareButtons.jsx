@@ -26,22 +26,6 @@ const shareImage = (url) => {
 export const ShareButtons = ({ size, image, inverted }) => {
   const image_url = useMemo(() => `/assets/match/${image}`, [image]);
   const btnsize = useMemo(() => size || "normal", [size]);
-  const [loading, setLoadingState] = useState({
-    share: false,
-    download: false,
-  });
-
-  const setLoading = (key, load) =>
-    setLoadingState((s) => ({
-      ...s,
-      [key]: load,
-    }));
-  const onShare = useCallback(() => {
-    setLoading("share", true);
-    shareImage(image_url).finally(() => {
-      setLoading("share", false);
-    });
-  }, [image_url]);
 
   if (!image || image == "") return null;
   return (
@@ -50,28 +34,25 @@ export const ShareButtons = ({ size, image, inverted }) => {
         <a
           className={`button is-link ${
             inverted ? "is-inverted" : ""
-          } is-${btnsize} ${loading.download && !inverted ? "is-loading" : ""}`}
-          disabled={loading.share || loading.download}
+          } is-${btnsize}`}
           href={image_url}
           download="gtcup2022_match.jpg"
         >
           <DownloadImageIcon className={`icon is-${btnsize} mr-1`} />
-          <span>{loading.download ? "loading..." : "Unduh"}</span>
+          <span>Unduh</span>
         </a>
       </p>
       {!!window.navigator.share && (
         <p className="control">
-          <button
+          <a
             className={`button is-info ${
               inverted ? "is-inverted" : ""
-            } is-${btnsize} ${loading.share && !inverted ? "is-loading" : ""}`}
-            disabled={loading.share || loading.download}
-            type="button"
-            onClick={onShare}
+            } is-${btnsize}`}
+            href={`/shareimage?url=${image_url}`}
           >
             <ShareIcon className={`icon is-${btnsize} mr-1`} />
-            <span>{loading.share ? "loading..." : "Bagikan"}</span>
-          </button>
+            <span>Bagikan</span>
+          </a>
         </p>
       )}
     </div>
