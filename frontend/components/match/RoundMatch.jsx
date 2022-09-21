@@ -8,13 +8,13 @@ export const RoundMatch = ({ title, datas, ...props }) => {
       <div className="py-2 px-4 has-background-dark has-text-white-ter has-text-weight-semibold">
         {title}
       </div>
-      {Object.values(datas).map(({ title, date, datas }) => (
+      {Object.values(datas).map(({ title, image, datas }) => (
         <div key={title}>
           <div className="py-1 px-4 has-background-grey-lighter has-text-weight-medium">
             {title}
           </div>
           <div className="py-1 px-4 has-background-white-ter">
-            <ShareButtons size="small" date={date} />
+            <ShareButtons size="small" image={image} />
           </div>
           <div className="columns is-gapless has-border mb-0">
             {datas.map((d) => (

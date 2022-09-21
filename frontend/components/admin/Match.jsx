@@ -5,7 +5,8 @@ import { DateTime } from "luxon";
 import { formatDate } from "@support/date";
 
 function generateInfo(match) {
-  const date = formatDate(DateTime.fromISO(match.Date));
+  const d = DateTime.fromISO(match.Date);
+  const date = formatDate(d);
   if (match.Type == "B") {
     const temp = match.Label.split("|");
     if (match.TeamAwayId && match.TeamHomeId) {
@@ -16,6 +17,7 @@ function generateInfo(match) {
           home: match.TeamHome.Name,
           away: match.TeamAway.Name,
           date,
+          d,
         },
       };
     } else {
@@ -26,6 +28,7 @@ function generateInfo(match) {
           home: temp[1],
           away: temp[2],
           date,
+          d,
         },
       };
     }
@@ -38,6 +41,7 @@ function generateInfo(match) {
       home: match.TeamHome.Name,
       away: match.TeamAway.Name,
       date,
+      d,
     },
   };
 }
@@ -66,6 +70,7 @@ export const Match = ({ datas, teams }) => {
                 <th width="180px">Away</th>
                 <th width="180px">Pemenang</th>
                 <th style={{ minWidth: "300px" }}>Set</th>
+                <th width="180px">Image</th>
               </tr>
             </thead>
             <tbody>
@@ -82,6 +87,15 @@ export const Match = ({ datas, teams }) => {
                           >
                             edit
                           </button>
+                        </p>
+                        <p className="control">
+                          <a
+                            type="button"
+                            className="button is-small is-success"
+                            href={`/bla/genimage?date=${m.info.d.toFormat('yyyy-MM-dd')}`}
+                          >
+                            gen
+                          </a>
                         </p>
                         {m.Type == "B" && (
                           <p className="control">
@@ -130,6 +144,7 @@ export const Match = ({ datas, teams }) => {
                         </span>
                       ))}
                     </td>
+                    <td>{m.Image || "NO"}</td>
                   </tr>
                 );
               })}

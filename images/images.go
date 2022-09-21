@@ -1,11 +1,12 @@
 package images
 
 import (
-	"encoding/base64"
 	"io"
 	"log"
 	"os"
+	"os/exec"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -19,25 +20,10 @@ const FONT_FAMILY = "font-family:'Montserrat', sans-serif"
 var MONTH_ID = []string{"","Januari","Februari","Maret","April","Mei","Juni","Juli","September","Oktober","November","Desember"}
 var WEEKDAY_ID = []string{"Minggu","Senin","Selasa","Rabu","Kamis","Jum'at","Sabtu"}
 var WEEKDAY_W = []int{185,133,170,127,140,160,145}
-
-func getImageBgUri() string {
-	bytes, err := os.ReadFile(path.Join("images", "bg.jpg"))
-	if err != nil {
-		log.Fatal(err)
-		return ""
-	}
-
-	return "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(bytes)
-}
-func getImageQrUri() string {
-	bytes, err := os.ReadFile(path.Join("images", "qr.jpg"))
-	if err != nil {
-		log.Fatal(err)
-		return ""
-	}
-
-	return "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(bytes)
-}
+var (
+	w = 1000
+	h = 1415
+)
 
 func genTitleGroup(s *svg.SVG, x int, y int, date time.Time) (int, int) {
 	titles := []string{"TODAY'S", "MATCHES"}
@@ -182,18 +168,16 @@ func genKlasemen(s *svg.SVG, x int, y int, g string, kl []match.GrupKlasemen) (i
 	return x, y
 }
 
-func GenSVG(file io.Writer, m []match.Match, k []match.GrupKlasemen) {
+func GenSVG(writer io.Writer, m []match.Match, k []match.GrupKlasemen) {
 	var (
-		w = 1000
-		h = 1415
 		x = 50
 		y = 250
 	)
 	
-	s := svg.New(file)
-	s.Start(w, h)
+	s := svg.New(writer)
+	s.Start(w, h, "viewBox=\"0 0 1000 1415\" enable-background=\"new 0 0 1000 1415\" xml:space=\"preserve\"")
 	s.Style("text/css", "@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');")
-	s.Image(0, 0, w, h, getImageBgUri())
+	s.Image(0, 0, w, h, BG)
 	if m[0].Type == "B" {
 		x, y = genTitleBracket(s, x, y, m[0].Group)
 		y += 20
@@ -214,10 +198,68 @@ func GenSVG(file io.Writer, m []match.Match, k []match.GrupKlasemen) {
 	y += 20
 	s.Text(x, y, "KELURAHAN LEDUG, PRIGEN - PASURUAN", "font-size:18px;font-weight:600;"+FONT_FAMILY)
 	y += 20
-	s.Image(x, y, 200, 200, getImageQrUri())
+	genQr(s, x, y)
 	y += 230
 	s.Text(x, y, "OFFICIAL WEBSITE", "font-size:24px;font-weight:700;"+FONT_FAMILY)
 	y += 20
 	s.Text(x, y, "https://gtcup2022.herokuapp.com", "font-size:18px;font-weight:600;"+FONT_FAMILY)
 	s.End()
+}
+
+func convertToImage(svgfile string, resfile string) error {
+	in, err := filepath.Abs(svgfile)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	out, err := filepath.Abs(resfile)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	cmd := exec.Command("convert", in, out)
+	e := cmd.Run()
+	if e != nil {
+		log.Println(e)
+		return e
+	}
+
+	return nil
+}
+
+func RemoveOldImage(m []match.Match)  {
+	for _, m2 := range m {
+		p := path.Join("public", "assets", "match", m2.Image)
+		if _, e := os.Stat(p); e == nil {
+			os.Remove(p)
+		}
+	}
+}
+
+func GenImage(m []match.Match, k []match.GrupKlasemen) (string, error) {
+	svgname := m[0].Date.Format("2006-01-02")+".svg"
+	resname := strconv.FormatInt(time.Now().UnixMilli(), 10)+".jpg"
+	svgfile := path.Join("images", "result", svgname)
+	resfile := path.Join("public", "assets", "match", resname)
+
+	if _, e := os.Stat(svgfile); e == nil {
+		os.Remove(svgfile)
+	}
+
+	f, err := os.Create(svgfile)
+	if err != nil {
+		log.Println(err)
+		return resname, err
+	}
+	defer f.Close()
+	GenSVG(f, m, k)
+	
+	e := convertToImage(svgfile, resfile)
+	if e != nil {
+		log.Println(e)
+		return resname, e
+	}
+
+	return resname, nil
 }

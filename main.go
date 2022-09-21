@@ -24,6 +24,7 @@ func initAdmin(app *server.Server)  {
 	e.GET("/bla/match", admin.AdminMatch, mustAuth)
 	e.POST("/bla/match/update", admin.UpdateMatch, mustAuth)
 	e.GET("/bla/bracket", admin.AdminMatch, mustAuth)
+	e.GET("/bla/genimage", admin.GenImage, mustAuth)
 }
 
 func init() {
@@ -31,7 +32,6 @@ func init() {
 		server.Route{Method: http.MethodGet, Path: "/", Handler: actions.Index, Middlewares: nil},
 		server.Route{Method: http.MethodGet, Path: "/klasemen", Handler: actions.Klasemen, Middlewares: nil},
 		server.Route{Method: http.MethodGet, Path: "/bracket", Handler: actions.Bracket, Middlewares: nil},
-		server.Route{Method: http.MethodGet, Path: "/share/image", Handler: actions.ShareImage, Middlewares: nil},
 	}
 
 	app = server.CreateServer(routes)

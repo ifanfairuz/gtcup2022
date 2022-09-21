@@ -23,8 +23,15 @@ func (repo *MatchRepo) Create(name string, alamat string) *Match {
 	repo.db.Create(model)
 	return model
 }
-func (repo *MatchRepo) Update(team *Match) {
-	repo.db.Save(team)
+func (repo *MatchRepo) Update(match *Match) {
+	repo.db.Save(match)
+}
+func (repo *MatchRepo) SetImage(matches []Match, image interface{}) {
+	var ids []uint
+	for _, m := range matches {
+		ids = append(ids, m.ID)
+	}
+	repo.db.Model(&Match{}).Where("id IN ?", ids).Update("image", image)
 }
 func (repo *MatchRepo) DeleteSetsNotIn(match *Match, notin []uint) error {
 	q := repo.db.Where("match_id = ?", match.ID)
