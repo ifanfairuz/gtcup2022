@@ -1,10 +1,10 @@
 package services
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
-	svg "github.com/ajstarks/svgo"
 	"github.com/ifanfairuz/gtcup2022/images"
 	"github.com/ifanfairuz/gtcup2022/repositories"
 	"github.com/ifanfairuz/gtcup2022/repositories/match"
@@ -20,14 +20,19 @@ func (service *ShareService) init() {
 	service.MatchRepo = service.DBM.GetRepo(&match.MatchRepo{}).(*match.MatchRepo)
 }
 
-func (service *ShareService) GenImageOnDate(d time.Time)  {
-	s := svg.New(service.W)
-	s.Start(1000, 1415)
-	s.Style("text/css", "@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap');")
-	s.Image(0, 0, 1000, 1415, images.GetImageBgUri())
-	s.Text(60, 200, "TODAY'S", "font-size:100px;font-family:'Montserrat', sans-serif;font-weight:800")
-	s.Text(60, 300, "MATCH", "font-size:120px;font-family:'Montserrat', sans-serif;font-weight:800")
-	s.End()
+func (service *ShareService) GenImageOnDate(d time.Time) error {
+	teamService := NewTeamService(service.DBM)
+	var m []match.Match
+	service.MatchRepo.QueryAll().Where("TO_CHAR(date, 'YYYY-MM-DD') = ?", d.Format("2006-01-02")).Find(&m)
+	if len(m) <= 0 {
+		return errors.New("match not found")
+	}
+	var k []match.GrupKlasemen
+	if m[0].Type == "G" {
+		k = teamService.GetKlasemenGroup(m[0].Group);
+	}
+	images.GenSVG(service.W, m, k)
+	return  nil
 }
 
 func NewShareService(dbm *repositories.DatabaseManager, w http.ResponseWriter) *ShareService {

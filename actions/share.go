@@ -19,6 +19,9 @@ func ShareImage(e echo.Context) error {
 
 	response := c.Response()
 	shareService := services.NewShareService(c.Server.DBM(), response.Writer)
-	shareService.GenImageOnDate(date)
-	return nil;
+	err = shareService.GenImageOnDate(date);
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error());
+	}
+	return err;
 }

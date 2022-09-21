@@ -9,53 +9,6 @@ import (
 	"github.com/ifanfairuz/gtcup2022/repositories/team"
 )
 
-type GrupKlasemen struct {
-	Team team.Team `json:"team"`
-	Matches []match.Match `json:"matches"`
-	Pos int `json:"pos"`
-	P int `json:"P"`
-	M int `json:"M"`
-	K int `json:"K"`
-	SM int `json:"SM"`
-	SK int `json:"SK"`
-	AS int `json:"AS"`
-	SCM int `json:"SCM"`
-	SCK int `json:"SCK"`
-	ASC int `json:"ASC"`
-	Poin int `json:"poin"`
-	Total int64 `json:"total"`
-}
-
-func (gk *GrupKlasemen) Count() {
-	gk.P = len(gk.Matches)
-	for _, m := range gk.Matches {
-		if m.Winner == gk.Team.ID {
-			gk.M++
-		} else {
-			gk.K++
-		}
-
-		for _, s := range m.Sets {
-			if m.TeamHomeId == gk.Team.ID {
-				gk.SCM += s.Home
-				gk.SCK += s.Away
-			} else if m.TeamAwayId == gk.Team.ID {
-				gk.SCM += s.Away
-				gk.SCK += s.Home
-			}
-			if s.Winner == gk.Team.ID {
-				gk.SM++
-			} else {
-				gk.SK++
-			}
-		}
-	}
-	gk.AS = gk.SM - gk.SK
-	gk.ASC = gk.SCM - gk.SCK
-	gk.Poin = gk.M * 3
-	gk.Total = int64((gk.M * 30 * 5) + (gk.AS * 30) + gk.ASC)
-}
-
 type TeamService struct {
 	DBM *repositories.DatabaseManager
 	TeamRepo *team.TeamRepo
@@ -67,9 +20,9 @@ func (service *TeamService) init() {
 	service.MatchRepo = service.DBM.GetRepo(&match.MatchRepo{}).(*match.MatchRepo)
 }
 
-func (service *TeamService) GetKlasemenGroup(group string) []GrupKlasemen {
+func (service *TeamService) GetKlasemenGroup(group string) []match.GrupKlasemen {
 	var (
-		res []GrupKlasemen
+		res []match.GrupKlasemen
 		teams []team.Team
 		wg sync.WaitGroup
 		m sync.RWMutex
@@ -82,7 +35,7 @@ func (service *TeamService) GetKlasemenGroup(group string) []GrupKlasemen {
 			defer m.Unlock()
 			m.Lock()
 			matches := service.MatchRepo.GetGroupDoneMatchesByTeam(t.ID)
-			klasemen := GrupKlasemen{Team: t, Matches: *matches}
+			klasemen := match.GrupKlasemen{Team: t, Matches: *matches}
 			klasemen.Count()
 			res = append(res, klasemen)
 		}(t)
@@ -104,12 +57,12 @@ func (service *TeamService) GetKlasemenGroup(group string) []GrupKlasemen {
 	return res
 }
 
-func (service *TeamService) getKlasemen() map[string][]GrupKlasemen {
+func (service *TeamService) getKlasemen() map[string][]match.GrupKlasemen {
 	var wg sync.WaitGroup
 	var mutex sync.Mutex
 	
 	groups := []string{"A", "B", "C", "D"}
-	klasemen := make(map[string][]GrupKlasemen)
+	klasemen := make(map[string][]match.GrupKlasemen)
 	for _, group := range groups {
 		wg.Add(1)
 		go func (group string)  {
@@ -125,7 +78,7 @@ func (service *TeamService) getKlasemen() map[string][]GrupKlasemen {
 
 func (service *TeamService) GetKlasemen() interface{} {
 	return struct {
-		Klasemen map[string][]GrupKlasemen `json:"klasemen"`
+		Klasemen map[string][]match.GrupKlasemen `json:"klasemen"`
 	}{
 		Klasemen: service.getKlasemen(),
 	}

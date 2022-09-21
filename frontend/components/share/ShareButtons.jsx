@@ -1,6 +1,56 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { DownloadImageIcon } from "@components/icons/DownloadImageIcon";
 import { ShareIcon } from "@components/icons/ShareIcon";
+import { Canvg } from "canvg";
+
+const getImage = (date) => {
+  const d = date.toFormat("yyyy-MM-dd");
+  const c = document.getElementById("cvs");
+  if (!c) return Promise.reject();
+
+  return fetch("/share/image?date="+d)
+  .then(res => res.text())
+  .then(res => {
+    const ctx = c.getContext("2d");
+    const v = Canvg.fromString(ctx, res);
+    v.start();
+    return v.ready()
+    .then(() => {
+      return {uri: c.toDataURL("image/jpg"), name: `match_${d}.jpg`};
+    });
+  });
+};
+const share = (date) => {
+  if (window.navigator.canShare()) {
+    return getImage(date)
+    .then(({uri, name}) => {
+      return fetch(uri)
+        .then((res) => res.blob())
+        .then((blob) => {
+          return new File([blob], name, {
+            type: blob.type,
+            lastModified: new Date().getTime(),
+          });
+        });
+    })
+    .then((file) => {
+      window.navigator.share({ files: [file] });
+    });
+  }
+
+  return Promise.reject("cannot share");
+};
+const download = (date) => {
+  return getImage(date)
+  .then(({uri, name}) => {
+    const a = document.createElement("a");
+    a.href = uri;
+    a.download = name
+    document.getElementById("opt").appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 1000);
+  });
+};
 
 export const ShareButtons = ({ size, date, inverted }) => {
   const btnsize = useMemo(() => size || "normal", [size]);
@@ -13,15 +63,17 @@ export const ShareButtons = ({ size, date, inverted }) => {
     setLoadingState((s) => ({ ...s, [key]: load }));
   const onDownload = useCallback(() => {
     setLoading("download", true);
-    setTimeout(() => {
+    download(date)
+    .finally(() => {
       setLoading("download", false);
-    }, 1000);
+    })
   }, [date]);
   const onShare = useCallback(() => {
     setLoading("share", true);
-    setTimeout(() => {
+    share(date)
+    .finally(() => {
       setLoading("share", false);
-    }, 1000);
+    })
   }, [date]);
 
   return (
