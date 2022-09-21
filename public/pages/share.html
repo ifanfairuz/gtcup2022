@@ -52,7 +52,10 @@
                 .then(function (file) {
                     var data = { files: [file] };
                     if (window.navigator.canShare && window.navigator.canShare(data)) {
-                        window.navigator.share(data);
+                        window.navigator.share(data)
+                        .finally(() => {
+                            window.close()
+                        });
                     }
                 })
                 .catch(function (err) {
