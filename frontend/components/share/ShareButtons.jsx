@@ -49,6 +49,7 @@ export const ShareButtons = ({ size, image, inverted }) => {
               inverted ? "is-inverted" : ""
             } is-${btnsize}`}
             href={`/shareimage?url=${image_url}`}
+            target="_blank"
           >
             <ShareIcon className={`icon is-${btnsize} mr-1`} />
             <span>Bagikan</span>
