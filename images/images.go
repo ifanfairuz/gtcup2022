@@ -178,6 +178,7 @@ func GenSVG(writer io.Writer, m []match.Match, k []match.GrupKlasemen) {
 	s.Start(w, h, "viewBox=\"0 0 1000 1415\" enable-background=\"new 0 0 1000 1415\" xml:space=\"preserve\"")
 	s.Style("text/css", "@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap');")
 	s.Image(0, 0, w, h, BG)
+	s.Group("stroke:none;")
 	if m[0].Type == "B" {
 		x, y = genTitleBracket(s, x, y, m[0].Group)
 		y += 20
@@ -203,6 +204,7 @@ func GenSVG(writer io.Writer, m []match.Match, k []match.GrupKlasemen) {
 	s.Text(x, y, "OFFICIAL WEBSITE", "font-size:24px;font-weight:700;"+FONT_FAMILY)
 	y += 20
 	s.Text(x, y, "https://gtcup2022.herokuapp.com", "font-size:18px;font-weight:600;"+FONT_FAMILY)
+	s.Gend()
 	s.End()
 }
 

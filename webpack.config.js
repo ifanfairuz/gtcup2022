@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const v = "0-3-3";
+const v = "0-3-4";
 const DIR = "./frontend";
 
 module.exports = {
