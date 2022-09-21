@@ -1,4 +1,4 @@
-package actions
+package admin
 
 import (
 	"net/http"
@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func ShareImage(e echo.Context) error {
+func GenImage(e echo.Context) error {
 	c := e.(*server.AppContext)
 	date, err := time.ParseInLocation("2006-01-02", c.QueryParam("date"), support.JAKARTA_TZ)
 	if err != nil {
@@ -19,9 +19,6 @@ func ShareImage(e echo.Context) error {
 
 	response := c.Response()
 	shareService := services.NewShareService(c.Server.DBM(), response.Writer)
-	err = shareService.GenImageOnDate(date);
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error());
-	}
-	return err;
+	shareService.GenImageOnDate(date);
+	return c.Redirect(http.StatusFound, "/bla/match")
 }

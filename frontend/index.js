@@ -20,10 +20,11 @@ const App = ({ matches, lastMatches, nextMatches }) => {
       const has = nextMatches && nextMatches.length > 0;
       if (!has) return null;
       const date = DateTime.fromISO(nextMatches[0].Date);
+      const image = nextMatches[0].Image;
       const label = date.hasSame(DateTime.now(), "day")
         ? "Pertandingan Hari Ini"
         : "Akan Datang";
-      return { has, date, date_format: formatDate(date), label };
+      return { has, date, date_format: formatDate(date), label, image };
     },
     [nextMatches]
   );
@@ -32,8 +33,9 @@ const App = ({ matches, lastMatches, nextMatches }) => {
       const has = lastMatches && lastMatches.length > 0;
       if (!has) return null;
       const date = DateTime.fromISO(lastMatches[0].Date);
+      const image = nextMatches[0].Image;
       const label = `Pertandingan ${lastMatches[0].Done ? "Terakhir" : "Terdekat"}`;
-      return { has, date, date_format: formatDate(date), label };
+      return { has, date, date_format: formatDate(date), label, image };
     },
     [lastMatches]
   );
@@ -48,6 +50,7 @@ const App = ({ matches, lastMatches, nextMatches }) => {
         g[title] = g[title] ?? {
           title,
           date,
+          image: match.Image,
           datas: [],
         };
 
@@ -96,8 +99,10 @@ const App = ({ matches, lastMatches, nextMatches }) => {
                 {nextMatchesData.label}
               </h4>
               <div className="is-flex is-flex-direction-column is-align-items-center mb-2">
-                <p className="has-text-centered">{nextMatchesData.date_format}</p>
-                <ShareButtons inverted date={nextMatchesData.date} />
+                <p className="has-text-centered">
+                  {nextMatchesData.date_format}
+                </p>
+                <ShareButtons inverted image={nextMatchesData.image} />
               </div>
               <div className="columns">
                 {nextMatches.map((n) => (
@@ -119,7 +124,7 @@ const App = ({ matches, lastMatches, nextMatches }) => {
             </h4>
             <div className="is-flex is-flex-direction-column is-align-items-center mb-2">
               <p className="has-text-centered">{lastMatchesData.date_format}</p>
-              <ShareButtons inverted date={lastMatchesData.date} />
+              <ShareButtons inverted image={lastMatchesData.image} />
             </div>
             <div className="columns">
               {lastMatches.map((n) => (

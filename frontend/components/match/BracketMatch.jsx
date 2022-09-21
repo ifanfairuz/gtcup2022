@@ -20,14 +20,14 @@ export const BracketMatch = ({ title, datas, ...props }) => {
       {matches.map((datas, i) => {
         return (
           <div key={i} className="columns is-gapless has-border mb-0">
-            {datas.map(({ title, date, match }) => (
+            {datas.map(({ title, match }) => (
               <div key={match.ID} id={`match-${match.ID}`} className="column">
                 <div className="py-1 px-4 has-background-grey-lighter has-text-weight-medium">
                   {title}
                 </div>
                 {!!match.TeamHomeId && !!match.TeamAwayId && (
                   <div className="py-1 px-4 has-background-white-ter">
-                    <ShareButtons size="small" date={date} />
+                    <ShareButtons size="small" image={match.Image} />
                   </div>
                 )}
                 <Match data={match} />

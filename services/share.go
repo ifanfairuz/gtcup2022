@@ -1,7 +1,6 @@
 package services
 
 import (
-	"errors"
 	"net/http"
 	"time"
 
@@ -20,19 +19,26 @@ func (service *ShareService) init() {
 	service.MatchRepo = service.DBM.GetRepo(&match.MatchRepo{}).(*match.MatchRepo)
 }
 
-func (service *ShareService) GenImageOnDate(d time.Time) error {
-	teamService := NewTeamService(service.DBM)
-	var m []match.Match
-	service.MatchRepo.QueryAll().Where("TO_CHAR(date, 'YYYY-MM-DD') = ?", d.Format("2006-01-02")).Find(&m)
-	if len(m) <= 0 {
-		return errors.New("match not found")
-	}
-	var k []match.GrupKlasemen
-	if m[0].Type == "G" {
-		k = teamService.GetKlasemenGroup(m[0].Group);
-	}
-	images.GenSVG(service.W, m, k)
-	return  nil
+func (service *ShareService) GenImageOnDate(d time.Time) {
+	go func() {
+		teamService := NewTeamService(service.DBM)
+		var m []match.Match
+		service.MatchRepo.QueryAll().Where("TO_CHAR(date, 'YYYY-MM-DD') = ?", d.Format("2006-01-02")).Find(&m)
+		if len(m) <= 0 {
+			return;
+		}
+		var k []match.GrupKlasemen
+		if m[0].Type == "G" {
+			k = teamService.GetKlasemenGroup(m[0].Group);
+		}
+		
+		images.RemoveOldImage(m)
+		service.MatchRepo.SetImage(m, nil)
+		img, err := images.GenImage(m, k)
+		if err == nil {
+			service.MatchRepo.SetImage(m, img)
+		}
+	}()
 }
 
 func NewShareService(dbm *repositories.DatabaseManager, w http.ResponseWriter) *ShareService {
