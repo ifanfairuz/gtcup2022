@@ -36,6 +36,7 @@ func (server *Server) E() *echo.Echo {
 func (server *Server) Init() {
 	server.env = loadEnv()
 	server.initDB()
+	server.initImage()
 	server.initSesion()
 	server.initRoute()
 	server.initTemplate()
