@@ -1,7 +1,7 @@
 package services
 
 import (
-	"net/http"
+	"io"
 	"time"
 
 	"github.com/ifanfairuz/gtcup2022/images"
@@ -11,7 +11,7 @@ import (
 
 type ShareService struct {
 	DBM *repositories.DatabaseManager
-	W http.ResponseWriter
+	W io.Writer
 	MatchRepo *match.MatchRepo
 }
 
@@ -41,7 +41,16 @@ func (service *ShareService) GenImageOnDate(d time.Time) {
 	}()
 }
 
-func NewShareService(dbm *repositories.DatabaseManager, w http.ResponseWriter) *ShareService {
+func (service *ShareService) RegenAllImage() {
+	go func() {
+		dates := service.MatchRepo.GetAllDatesWithNoImage()
+		for _, v := range dates {
+			service.GenImageOnDate(v.Date)
+		}
+	}()
+}
+
+func NewShareService(dbm *repositories.DatabaseManager, w io.Writer) *ShareService {
 	service := &ShareService{DBM: dbm, W: w}
 	service.init()
 	return service

@@ -243,7 +243,7 @@ func RemoveOldImage(m []match.Match)  {
 
 func GenImage(m []match.Match, k []match.GrupKlasemen) (string, error) {
 	svgname := m[0].Date.Format("2006-01-02")+".svg"
-	resname := strconv.FormatInt(time.Now().UnixMilli(), 10)+".jpg"
+	resname := strconv.FormatInt(time.Now().UnixNano(), 10)+".jpg"
 	svgfile := path.Join("images", "result", svgname)
 	resfile := path.Join("public", "assets", "match", resname)
 
