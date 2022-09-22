@@ -147,7 +147,7 @@ func GenSVGGroup(writer io.Writer, m []match.Match, k []match.GrupKlasemen) {
 	s.Image(0, 0, GrupDimension.W, GrupDimension.H, G_BG)
 	s.Group("stroke:none;")
 	x, y = genTitleGroup(s, x, y)
-	x, y = genDateGroup(s, x, y, m[0].Date)
+	x, y = genDateGroup(s, x, y, m[0].Date.In(support.JAKARTA_TZ))
 	x, y = genMatchGroup(s, x, y, m)
 	genKlasemenGroup(s, x, y, m[0].Group, k)
 	genFooterGroup(s, x, y)
