@@ -232,9 +232,11 @@ func convertToImage(svgfile string, resfile string) error {
 
 func RemoveOldImage(m []match.Match)  {
 	for _, m2 := range m {
-		p := path.Join("public", "assets", "match", m2.Image)
-		if _, e := os.Stat(p); e == nil {
-			os.Remove(p)
+		if m2.Image != "" {
+			p := path.Join("public", "assets", "match", m2.Image)
+			if _, e := os.Stat(p); e == nil {
+				os.Remove(p)
+			}
 		}
 	}
 }
