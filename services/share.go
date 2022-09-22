@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"io"
 	"time"
 
@@ -28,13 +29,19 @@ func (service *ShareService) GenImageOnDate(d time.Time) {
 			return;
 		}
 		var k []match.GrupKlasemen
+		var mm []match.Match
 		if m[0].Type == "G" {
 			k = teamService.GetKlasemenGroup(m[0].Group);
+		} else {
+			teamService.MatchRepo.QueryAll().
+			Where("type = ? and round = ?", m[0].Type, m[0].Round).
+			Order("date asc").
+			Find(&mm)
 		}
 		
 		images.RemoveOldImage(m)
 		service.MatchRepo.SetImage(m, nil)
-		img, err := images.GenImage(m, k)
+		img, err := images.GenImage(m, k, mm)
 		if err == nil {
 			service.MatchRepo.SetImage(m, img)
 		}
@@ -44,6 +51,7 @@ func (service *ShareService) GenImageOnDate(d time.Time) {
 func (service *ShareService) RegenAllImage() {
 	go func() {
 		dates := service.MatchRepo.GetAllDatesWithNoImage()
+		fmt.Println(len(dates))
 		for _, v := range dates {
 			service.GenImageOnDate(v.Date)
 		}

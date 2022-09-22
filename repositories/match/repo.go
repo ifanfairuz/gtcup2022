@@ -119,7 +119,7 @@ func (repo *MatchRepo) GetGroupDoneMatchesByTeam(team_id uint) *[]Match {
 func (repo *MatchRepo) GetAllDatesWithNoImage() []struct{ Date time.Time } {
 	var res []struct{ Date time.Time }
 	repo.db.Table("matches").
-	Select("\"date\"").Where("image != ? and image != ?", nil, "").
+	Select("\"date\"").Where("image is not null").
 	Group("\"date\"").Find(&res)
 	return res;
 }
