@@ -8,6 +8,7 @@ import (
 
 	svg "github.com/ajstarks/svgo"
 	"github.com/ifanfairuz/gtcup2022/repositories/match"
+	"github.com/ifanfairuz/gtcup2022/support"
 )
 
 var QuarterDimension = Dimesion{W: 800, H: 1132}
@@ -105,7 +106,7 @@ func GenSVGQuarter(writer io.Writer, m match.Match, mm []match.Match) {
 	s.Style("text/css", Css("montserrat"))
 	s.Image(0, 0, QuarterDimension.W, QuarterDimension.H, B_BG)
 	s.Group("stroke:none;")
-	genDateQuarter(s, m.Date)
+	genDateQuarter(s, m.Date.In(support.JAKARTA_TZ))
 	genMatchQuarter(s, m)
 	genMatchesQuarter(s, mm)
 	genFooterQuarter(s)
