@@ -65,7 +65,7 @@ func genMatchesQuarter(s *svg.SVG, mm []match.Match) {
 		} else {
 			xx -= 325
 		}
-		s.Text(x, y, strings.ToUpper(home), mergeStyles("font-size=\"15pt\"", "ff-montserrat", "fw-regular", anchor, "fill-white")...)
+		s.Text(x/2, y, strings.ToUpper(home), mergeStyles("font-size=\"15pt\"", "ff-montserrat", "fw-regular", "ta-middle", "fill-white")...)
 		if m.Done {
 			xxx := xx
 			s.Text(xxx, y, "("+strconv.Itoa(wH)+")", mergeStyles("font-size=\"15pt\"", "ff-montserrat", "fw-regular", "ta-middle", "fill-white")...)
@@ -79,7 +79,7 @@ func genMatchesQuarter(s *svg.SVG, mm []match.Match) {
 			}
 		}
 		y += 20
-		s.Text(x, y, strings.ToUpper(away), mergeStyles("font-size=\"15pt\"", "ff-montserrat", "fw-regular", anchor, "fill-white")...)
+		s.Text(x+((QuarterDimension.W - x)/2), y, strings.ToUpper(away), mergeStyles("font-size=\"15pt\"", "ff-montserrat", "fw-regular", "ta-middle", "fill-white")...)
 		if m.Done {
 			xxx := xx
 			s.Text(xxx, y, "("+strconv.Itoa(wA)+")", mergeStyles("font-size=\"15pt\"", "ff-montserrat", "fw-regular", "ta-middle", "fill-white")...)
