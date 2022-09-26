@@ -22,9 +22,15 @@ func genMatchQuarter(s *svg.SVG, m match.Match) {
 	home := strings.ToUpper(m.TeamHome.Name)
 	away := strings.ToUpper(m.TeamAway.Name)
 	midW := QuarterDimension.MidW()
+	p := 30
+	rC := 75
+	xH := midW-rC
+	xH = p+((xH-p)/2)
+	xA := midW+rC
+	xA = QuarterDimension.W-p-((QuarterDimension.W-p-xA)/2)
 	y := 847
-	s.Text(midW/2, y, home, mergeStyles("font-size=\"35pt\"", "ff-montserrat", "fw-extrabold", "ta-end", "fill-white")...)
-	s.Text(midW*3/4, y, away, mergeStyles("font-size=\"35pt\"", "ff-montserrat", "fw-extrabold", "ta-start", "fill-white")...)
+	s.Text(xH, y, home, mergeStyles("font-size=\"35pt\"", "ff-montserrat", "fw-extrabold", "ta-middle", "fill-white")...)
+	s.Text(xA, y, away, mergeStyles("font-size=\"35pt\"", "ff-montserrat", "fw-extrabold", "ta-middle", "fill-white")...)
 }
 
 func genMatchesQuarter(s *svg.SVG, mm []match.Match) {
