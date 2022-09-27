@@ -29,6 +29,18 @@ func genMatchQuarter(s *svg.SVG, m match.Match) {
 	xA := midW+rC
 	xA = QuarterDimension.W-p-((QuarterDimension.W-p-xA)/2)
 	y := 847
+	var wH, wA int
+	if m.Done {
+		for _, s := range m.Sets {
+			if s.Winner == m.TeamHomeId {
+				wH++
+			} else if s.Winner == m.TeamAwayId {
+				wA++
+			}
+		}
+		home += " ("+ strconv.Itoa(wH) +")"
+		away += " ("+ strconv.Itoa(wA) +")"
+	}
 	s.Text(xH, y, home, mergeStyles("font-size=\"35pt\"", "ff-montserrat", "fw-extrabold", "ta-middle", "fill-white")...)
 	s.Text(xA, y, away, mergeStyles("font-size=\"35pt\"", "ff-montserrat", "fw-extrabold", "ta-middle", "fill-white")...)
 }
