@@ -14,7 +14,7 @@ import (
 var QuarterDimension = Dimesion{W: 800, H: 1132}
 
 func genDateQuarter(s *svg.SVG, date time.Time) {
-	tgl := strings.ToUpper(WEEKDAY_ID[date.Weekday()]+date.Format(" | 02 ")+MONTH_ID[date.Month()]+date.Format(" 2006 | 15:04 WIB"))
+	tgl := strings.ToUpper(WEEKDAY_ID[date.Weekday()]+date.Format(" | 02 ")+MONTH_ID[date.Month()-1]+date.Format(" 2006 | 15:04 WIB"))
 	s.Text(QuarterDimension.MidW(), 760, tgl, mergeStyles("font-size=\"30pt\"", "ff-montserrat", "fw-extrabold", "ta-middle", "fill-white")...)
 }
 

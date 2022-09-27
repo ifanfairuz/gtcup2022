@@ -30,9 +30,9 @@ func (d *Dimesion) MidH() int {
 	return d.H/2
 }
 
-var WEEKDAY_ID = []string{"Minggu","Senin","Selasa","Rabu","Kamis","Jum'at","Sabtu"}
-var WEEKDAY_W = []int{185,133,170,127,140,160,145}
-var MONTH_ID = []string{"","Januari","Februari","Maret","April","Mei","Juni","Juli","September","Oktober","November","Desember"}
+var WEEKDAY_ID = [...]string{"Minggu","Senin","Selasa","Rabu","Kamis","Jum'at","Sabtu"}
+var WEEKDAY_W = [...]int{185,133,170,127,140,160,145}
+var MONTH_ID = [...]string{"","Januari","Februari","Maret","April","Mei","Juni","Juli","September","Oktober","November","Desember"}
 
 func convertToImage(svgfile string, resfile string) error {
 	in, err := filepath.Abs(svgfile)

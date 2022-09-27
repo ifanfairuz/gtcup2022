@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"io"
 	"time"
 
@@ -51,7 +50,6 @@ func (service *ShareService) GenImageOnDate(d time.Time) {
 func (service *ShareService) RegenAllImage() {
 	go func() {
 		dates := service.MatchRepo.GetAllDatesWithNoImage()
-		fmt.Println(len(dates))
 		for _, v := range dates {
 			service.GenImageOnDate(v.Date)
 		}
