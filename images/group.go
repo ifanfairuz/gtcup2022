@@ -24,7 +24,7 @@ func genTitleGroup(s *svg.SVG, x int, y int) (int, int) {
 func genDateGroup(s *svg.SVG, x int, y int, date time.Time) (int, int) {
 	px := 8
 	py := 10
-	tgl := strings.ToUpper(date.Format("02 ")+MONTH_ID[date.Month()]+date.Format(" 2006"))
+	tgl := strings.ToUpper(date.Format("02 ")+MONTH_ID[date.Month()-1]+date.Format(" 2006"))
 	s.Rect(x, y-30-py, WEEKDAY_W[date.Weekday()]+(px*2), 30+(py*2), genStyles("fill-blue")...)
 	s.Text(x+px, y, strings.ToUpper(WEEKDAY_ID[date.Weekday()]), mergeStyles("font-size=\"42px\"", "ff-montserrat", "fw-semibold", "fill-white")...)
 	s.Text(x, y+35, tgl, mergeStyles("font-size=\"24px\"", "ff-montserrat", "fw-bold")...)
